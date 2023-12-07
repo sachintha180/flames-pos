@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
     <title>Flames POS</title>
 </head>
 
@@ -17,7 +18,7 @@
         <h2>Login</h2>
         <form id="login-form">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="e.g. FlamesAdmin123">
+            <input type="text" id="username" name="username">
             <label for="password">Password</label>
             <input type="password" id="password" name="password">
             <input type="button" id="submit" name="submit" value="Submit">
