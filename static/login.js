@@ -14,7 +14,7 @@ async function authenticate(username, password) {
         return result
     }
     catch (error) {
-        return error
+        console.error(error)
     }
 }
 
@@ -30,8 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const password = document.querySelector("#password").value
 
         if (username && password) {
-            const response = authenticate(username, password);
-            console.log(response);
+            authenticate(username, password).then(response => {
+                console.log(response);
+            });
         }
         else {
             if (!username) {
