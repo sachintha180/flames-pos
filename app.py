@@ -25,6 +25,7 @@ class Base(DeclarativeBase):
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///flames.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
@@ -46,6 +47,9 @@ class User(db.Model):
     # foreign key constraints for user-order (1:M) - ON DELETE NO CHANGE
     order: Mapped[List["Order"]] = relationship(back_populates="user")
 
+    def __repr__(self):
+        return f"<User {self.username}>"
+
 
 class Customer(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -62,6 +66,9 @@ class Customer(db.Model):
         back_populates="customer", cascade="all, delete", passive_deletes=True
     )
 
+    def __repr__(self):
+        return f"<Customer {self.name}>"
+
 
 class Staff(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -71,6 +78,9 @@ class Staff(db.Model):
     )
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String, unique=True)
+
+    def __repr__(self):
+        return f"<Staff {self.name}>"
 
 
 class Payment(db.Model):
@@ -83,6 +93,9 @@ class Payment(db.Model):
     balance: Mapped[float] = mapped_column(Numeric)
     paid_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
     discount: Mapped[float] = mapped_column(Numeric)
+
+    def __repr__(self):
+        return f"<Payment {self.amount}>"
 
 
 # SQLAlchemy.Core associative table for resolving order-product (M:M) relationship
@@ -130,6 +143,12 @@ class Order(db.Model):
     # setup unique constraints for 1:1 relationships
     __table_args__ = (UniqueConstraint("payment_id"), UniqueConstraint("staff_id"))
 
+    def __repr__(self):
+        return f"<Order {self.id}>"
+
+
+# SQLAlchemy.Core model for product
+
 
 class Product(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -140,6 +159,9 @@ class Product(db.Model):
     order: Mapped[List["Order"]] = relationship(
         secondary=OrderProduct, back_populates="product"
     )
+
+    def __repr__(self):
+        return f"<Product {self.name}>"
 
 
 @app.route("/login", methods=["GET", "POST"])
