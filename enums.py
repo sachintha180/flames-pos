@@ -7,13 +7,12 @@ This module contains the enums used in the Flames POS application models.
 import enum
 
 
-# declare enum for user role
 class UserRole(enum.Enum):
     admin = "admin"
+    manager = "manager"
     cashier = "cashier"
 
 
-# declare enum for staff role
 class StaffRole(enum.Enum):
     manager = "manager"
     chef = "chef"
@@ -22,7 +21,6 @@ class StaffRole(enum.Enum):
     waiter = "waiter"
 
 
-# declare enum for payment type
 class PaymentType(enum.Enum):
     cash = "cash"
     card = "card"
@@ -30,7 +28,6 @@ class PaymentType(enum.Enum):
     cash_on_delivery = "cash_on_delivery"
 
 
-# declare enum for order status
 class OrderStatus(enum.Enum):
     pending = "pending"
     confirmed = "confirmed"
