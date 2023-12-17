@@ -11,6 +11,7 @@ The models are:
 - Staff: Represents a staff member of the application.
 - Payment: Represents a payment made by a customer.
 - Order: Represents an order placed by a customer.
+- OrderProduct: Represents the products in an order.
 - Product: Represents a product that can be ordered.
 """
 
