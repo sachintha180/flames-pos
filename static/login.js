@@ -19,8 +19,8 @@ async function authenticate(username, password) {
 
 document.addEventListener("DOMContentLoaded", () => {
     const submitBtn = document.querySelector("#submit");
-    const exitBtn = document.querySelector("#exit");
-    const errorLbl = document.querySelector("#error-lbl");
+    const errorTitle = document.querySelector("#error_title");
+    const errorLbl = document.querySelector("#error_lbl");
 
     submitBtn.addEventListener("click", () => {
         const username = document.querySelector("#username").value;
@@ -28,12 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (username && password) {
             authenticate(username, password).then((response) => {
-                console.log(response);
+                if (response.status_code != 200) {
+                    errorTitle.innerHTML = response.message;
+                    errorLbl.innerHTML = response.action;
+                } else {
+                    showConfirmForm(response.data.admin);
+                }
             });
         } else {
             if (!username) {
+                errorTitle.innerHTML = "Invalid username";
                 errorLbl.innerHTML = "Please enter a valid username";
             } else {
+                errorTitle.innerHTML = "Invalid password";
                 errorLbl.innerHTML = "Please enter a valid password";
             }
         }
