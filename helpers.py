@@ -5,6 +5,7 @@ This module contains helper functions for the Flames POS application.
 The helper functions are:
 - generate_response: Generates a JSON response with a status code, message, action, and data.
 - check_credential_presence: Checks if the request JSON contains the username and password and is not empty.
+- verify_credentials: Verifies the provided credentials against the actual credentials.
 """
 
 from flask import jsonify
@@ -92,3 +93,37 @@ def check_credential_presence(request_json):
     valid = True
 
     return (username, password), valid
+
+
+def verify_credentials(provided_creds, actual_creds):
+    """Verify the provided credentials against the actual credentials.
+
+    Args:
+        provided_creds (dict): the provided credentials; username and password
+        actual_creds (dict): the actual credentials; username and password
+    Returns:
+        response (Response): Response with a status code, message, action, and data
+    """
+
+    if provided_creds["username"] != actual_creds["username"]:
+        return generate_response(
+            status_code=401,
+            message="Invalid username",
+            action="Please enter the correct username",
+            data={"authenticated": False},
+        )
+
+    elif provided_creds["password"] != actual_creds["password"]:
+        return generate_response(
+            status_code=401,
+            message="Invalid password",
+            action="Please enter the correct password",
+            data={"authenticated": False},
+        )
+
+    return generate_response(
+        status_code=200,
+        message="Login successful",
+        action="You are now logged in",
+        data={"authenticated": True},
+    )
