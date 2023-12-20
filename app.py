@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, render_template, request, session
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import exc
-from base import Base
+from flask import Flask, render_template, request, session
+from models import db, User
+from helpers import generate_response, validate_attributes
+from flask_bcrypt import generate_password_hash, check_password_hash
+import enums
 
 # IMPORTANT:
 #   Follow these steps during the first run:
@@ -17,31 +18,102 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///flames.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = "6225ca4ab01df210894501e8958e8611a7dd5ddf73f2c9cbb8064b1afd52bb1f"
 
-db = SQLAlchemy(model_class=Base)
+# initialize models.py SQLAlchemy object
 db.init_app(app)
-
-from models import *
 
 # note: db.create_all() only creates models if they don't exist
 with app.app_context():
     db.create_all()
 
 
-def generate_response(status_code, message, action, data):
-    """Generate a JSON response with a status code, message, action, and data.
+# note: /initialize route and its child routes are NOT PUBLICLY visible
+@app.route("/initialize", methods=["GET", "POST"])
+def initialize():
+    if request.method == "GET":
+        return render_template("initialize.html")
+    else:
+        # validate the presence of username and password attributes in payload
+        response = validate_attributes(request.json, ["username", "password"])
+        if response["status_code"] != 200:
+            return response
 
-    Args:
-        status_code (int): the status code of the response
-        message (str): the message of the response
-        action (str): the action of the response
-        data (dict): the data of the response
-    Returns:
-        response (Response): the JSON response with a status code, message, action, and data
-    """
+        # verify the provided credentials against the superadmin's credentials
+        superadmin_creds = {
+            "username": "superadmin",
+            "password": "admin123",
+        }
+        response = validate_attributes(
+            request.json, request.json.keys(), superadmin_creds
+        )
+        if response["status_code"] != 200:
+            return response
 
-    response = jsonify({"message": message, "action": action, "data": data})
-    response.status_code = status_code
-    return response
+        # return the admin user's default credentials
+        admin_default = {
+            "username": "admin",
+            "password": "Pi$$a@456",
+            "name": "Flames POS Administrator",
+            "mobile_no": "0121231234",
+            "role": "admin",
+        }
+        return generate_response(
+            status_code=200,
+            message="Login successful",
+            action="You are now authenticated as superadmin",
+            data={"admin_default": admin_default, "flag": True},
+        )
+
+
+@app.route("/add_admin", methods=["POST"])
+def addAdmin():
+    if request.method == "POST":
+        try:
+            # validate the presence of User model attributes in payload
+            response = validate_attributes(
+                request.json, ["username", "password", "name", "mobile_no"]
+            )
+            if response["status_code"] != 200:
+                return response
+
+            # check if provided username already exists
+            try:
+                user = db.session.execute(
+                    db.select(User).filter(User.username == response.json["username"])
+                ).scalar_one()
+            except:
+                # create and insert admin into database
+                admin = User(
+                    username=request.json["username"],
+                    password=generate_password_hash(request.json["password"]),
+                    name=request.json["name"],
+                    mobile_no=request.json["mobile_no"],
+                    role=enums.UserRole.admin.value,
+                )
+                db.session.add(admin)
+                db.session.commit()
+            else:
+                return generate_response(
+                    status_code=400,
+                    message="Username already exists",
+                    action="Please try again with a different username",
+                    data={"flag": False},
+                )
+
+        except:
+            return generate_response(
+                status_code=400,
+                message="Failed to add adminstrator",
+                action="Please try again",
+                data={"flag": False},
+            )
+
+        # otherwise, return success JSON
+        return generate_response(
+            status_code=200,
+            message="Successfully added admin",
+            action=f"You have now added the admin '{request.json['username']}'",
+            data={"flag": True},
+        )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -49,66 +121,41 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
     else:
-        # check #1: username not provided in payload
-        try:
-            username = request.json["username"]
-        except KeyError:
-            return generate_response(
-                status_code=400,
-                message="Username not received",
-                action="Please refresh your page and try logging in again",
-                data={"authenticated": False},
-            )
+        # validate the presence of username and password attributes in payload
+        response = validate_attributes(request.json, ["username", "password"])
+        if response["status_code"] != 200:
+            return response
 
-        # check #2: password not provided in payload
-        try:
-            password = request.json["password"]
-        except KeyError:
-            return generate_response(
-                status_code=400,
-                message="Password not received",
-                action="Please refresh your page and try logging in again",
-                data={"authenticated": False},
-            )
-
-        # check #3: username empty in payload
-        if username is None:
-            return generate_response(
-                status_code=400,
-                message="Empty username",
-                action="Please enter a valid username",
-                data={"authenticated": False},
-            )
-
-        # check #4: password empty in payload
-        if password is None:
-            return generate_response(
-                status_code=400,
-                message="Empty password",
-                action="Please enter a valid password",
-                data={"authenticated": False},
-            )
-
-        # otherwise: get username from database
+        # otherwise, get username from database + save to session variable
         try:
             user = db.session.execute(
-                db.select(User).filter(User.username == username)
+                db.select(User).filter(User.username == response.json["username"])
             ).scalar_one()
-        except exc.NoResultFound:
+        except:
             return generate_response(
                 status_code=404,
                 message="Username not found",
                 action="Please register your account via an administrator",
-                data={"authenticated": False},
+                data={"flag": False},
             )
-        else:
-            session["username"] = username
 
+        session["username"] = response.json["username"]
+
+        # verify password against saved password
+        if not check_password_hash(user.password, response.json["password"]):
+            return generate_response(
+                status_code=401,
+                message="Authentication failed",
+                action="Incorrect password, please try again",
+                data={"flag": False},
+            )
+
+        # return success JSON
         return generate_response(
             status_code=200,
             message="Login successful",
             action="You are now logged in",
-            data={"authenticated": True},
+            data={"flag": True},
         )
 
 
