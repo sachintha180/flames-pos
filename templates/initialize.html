@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{ url_for('static', filename='login.js') }}"></script>
+    <script src="{{ url_for('static', filename='initialize.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Login: Flames POS</title>
+    <title>Initialize: Flames POS</title>
 </head>
 
 <body>
@@ -20,15 +20,14 @@
         <p id="error_lbl"></p>
     </section>
 
-    <section id="login">
-        <h2>Login</h2>
-        <form id="login_form">
+    <section id="admin">
+        <h2>Login as super admin to continue</h2>
+        <form id="auth_form">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" required />
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-            <input type="button" id="submit" name="submit" value="Submit">
-            <input type="button" id="exit" name="exit" value="Exit">
+            <input type="password" id="password" name="password" required />
+            <input type="button" id="submit" name="submit" value="Submit" />
         </form>
     </section>
 
