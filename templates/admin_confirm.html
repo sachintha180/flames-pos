@@ -1,0 +1,16 @@
+{% extends "initialize.html" %}
+
+{% block admin %}
+<h2>Click Create to add the first admin to FlamesPOS DB</h2>
+<h3>Admin Details</h3>
+<ul>
+    <li>Username: {{ admin.username }}</li>
+    <li>Password: {{ admin.password }}</li>
+    <li>Name: {{ admin.name }}</li>
+    <li>Mobile No: {{ admin.mobile_no }}</li>
+</ul>
+<form id="confirm-form">
+    <input type="button" id="create_admin" name="create_admin" value="Create" />
+    <input type="button" id="clear_db" name="clear_db" value="Clear DB" />
+</form>
+{% endblock %}
