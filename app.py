@@ -4,15 +4,6 @@ from helpers import generate_response, validate_attributes
 from flask_bcrypt import generate_password_hash, check_password_hash
 import enums
 
-# IMPORTANT:
-#   Follow these steps during the first run:
-#    (1) Run app.py FIRST on / route and stop the server
-#    (2) Run setup.py next (after instance/flames.db has initialized)
-#    (3) Restart app.py and continue as usual
-
-# TODO: Running `python app.py` doesn't work due to:
-#       "The current Flask app is not registered with this 'SQLAlchemy' instance. Did you forget to call 'init_app'"
-
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///flames.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -77,7 +68,7 @@ def addAdmin():
 
             # check if provided username already exists
             try:
-                user = db.session.execute(
+                db.session.execute(
                     db.select(User).filter(User.username == response.json["username"])
                 ).scalar_one()
             except:
