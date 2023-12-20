@@ -5,14 +5,6 @@ This module contains the base class for all models in the Flames POS
 application and application constants. 
 """
 
-# import ORM base class
-from sqlalchemy.orm import DeclarativeBase
-
-
-# initialize derived DeclarativeBase
-class Base(DeclarativeBase):
-    pass
-
 
 # initialize application constants
-DB_FILEPATH = "instance/flames.db"
+
