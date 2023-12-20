@@ -29,10 +29,18 @@ from sqlalchemy import (
     UniqueConstraint,
     Enum,
 )
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 import enums
-from base import Base
-from app import db
+
+
+# base class for all declarative models
+class Base(DeclarativeBase):
+    pass
+
+
+# initialized in app.py
+db = SQLAlchemy(model_class=Base)
 
 
 class User(db.Model):
@@ -128,7 +136,7 @@ class Payment(db.Model):
 OrderProduct = Table(
     # attributes
     "order_product",
-    Base.metadata,
+    db.metadata,
     Column("order_id", ForeignKey("order.id"), primary_key=True),
     Column("product_id", ForeignKey("product.id"), primary_key=True),
     Column("quantity", Integer, nullable=False),
