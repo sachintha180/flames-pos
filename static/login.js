@@ -1,4 +1,4 @@
-export async function postJSON(routeURL, jsonObject) {
+async function postJSON(routeURL, jsonObject) {
     try {
         const response = await fetch(routeURL, {
             method: "POST",
