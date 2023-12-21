@@ -50,7 +50,7 @@ def validate_attributes(attribute_dict, attribute_list, target_dict=None):
             )
 
         # if found, check if attribute is falsy
-        if attribute_dict[attribute]:
+        if not attribute_dict[attribute]:
             return generate_response(
                 status_code=400,
                 message=f"Empty {attribute.capitalize()}",
