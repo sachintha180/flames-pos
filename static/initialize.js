@@ -52,16 +52,21 @@ function handleAdmin() {
     }
 }
 
-function resetDB() {
+function resetDB(username, password) {
     const errorTitle = document.querySelector("#error_title");
     const errorLbl = document.querySelector("#error_lbl");
     errorTitle.innerHTML = "";
     errorLbl.innerHTML = "";
 
-    let confirm = window.confirm("Are you sure you want to reset the database?");
-    
+    let confirm = window.confirm(
+        "Are you sure you want to reset the database?"
+    );
+
     if (confirm) {
-        postJSON("/reset_db", {}).then((response) => {
+        postJSON("/reset_db", {
+            username: username,
+            password: password,
+        }).then((response) => {
             errorTitle.innerHTML = response.message;
             errorLbl.innerHTML = response.action;
         });
@@ -91,7 +96,9 @@ function handleAuth() {
                     .addEventListener("click", handleAdmin);
                 document
                     .querySelector("#reset_db")
-                    .addEventListener("click", resetDB);
+                    .addEventListener("click", () => {
+                        resetDB(username, password);
+                    });
             }
         });
     } else {

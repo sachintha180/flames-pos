@@ -2,13 +2,11 @@ from flask import Flask, render_template, request, session
 from models import db, User
 from helpers import generate_response, validate_attributes
 from flask_bcrypt import generate_password_hash, check_password_hash
+from multiprocessing import cpu_count
 import enums
-import traceback
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///flames.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.secret_key = "6225ca4ab01df210894501e8958e8611a7dd5ddf73f2c9cbb8064b1afd52bb1f"
+app.config.from_object("config.DevelopmentConfig")
 
 # initialize models.py SQLAlchemy object
 db.init_app(app)
@@ -18,84 +16,83 @@ with app.app_context():
     db.create_all()
 
 
-# note: /initialize route and its child routes are NOT PUBLICLY visible
+# note: /initialize route is NOT PUBLICLY visible
 @app.route("/initialize", methods=["GET", "POST"])
 def initialize():
     if request.method == "GET":
         return render_template("initialize.html")
     else:
-        # validate the presence of username and password attributes in payload
-        response = validate_attributes(request.json, ["username", "password"])
-        if response.status_code != 200:
-            return response
-
         # verify the provided credentials against the superadmin's credentials
-        superadmin_creds = {
-            "username": "superadmin",
-            "password": "admin123",
-        }
         response = validate_attributes(
-            request.json, request.json.keys(), superadmin_creds
+            request.json,
+            ["username", "password"],
+            app.config.get("SUPERADMIN_CREDENTIALS"),
         )
         if response.status_code != 200:
             return response
 
         # return the admin user's default credentials
-        admin_default = {
-            "username": "admin",
-            "password": "Pi$$a@456",
-            "name": "Flames POS Administrator",
-            "mobile_no": "0121231234",
-            "role": "admin",
-        }
         return generate_response(
             status_code=200,
             message="Login successful",
             action="You are now authenticated as superadmin",
-            data={"admin_default": admin_default, "flag": True},
+            data={"admin_default": app.config.get("ADMIN_DEFAULT_CREDS"), "flag": True},
         )
 
 
+# note: /add_admin route is NOT PUBLICLY visible
 @app.route("/add_admin", methods=["POST"])
 def addAdmin():
     if request.method == "POST":
-        try:
-            # validate the presence of User model attributes in payload
-            response = validate_attributes(
-                request.json, ["username", "password", "name", "mobile_no"]
-            )
-            if response.status_code != 200:
-                return response
+        # validate the presence of User model attributes in payload
+        response = validate_attributes(
+            request.json, ["username", "password", "name", "mobile_no"]
+        )
+        if response.status_code != 200:
+            return response
 
-            # check if provided username already exists
-            try:
+        # query username in database
+        try:
+            matched_users = (
                 db.session.execute(
                     db.select(User).filter(User.username == request.json["username"])
-                ).scalar_one()
-            except:
-                # create and insert admin into database
-                admin = User(
-                    username=request.json["username"],
-                    password=generate_password_hash(request.json["password"]),
-                    name=request.json["fullname"],
-                    mobile_no=request.json["mobile_no"],
-                    role=enums.UserRole.admin.value,
                 )
-                db.session.add(admin)
-                db.session.commit()
-            else:
-                return generate_response(
-                    status_code=400,
-                    message="Username already exists",
-                    action="Please try again with a different username",
-                    data={"flag": False},
-                )
+                .scalars()
+                .all()
+            )
+        except Exception as e:
+            return generate_response(
+                status_code=400,
+                message="Failed to check adminstrator",
+                action=f"Server responded with error: {e}",
+                data={"flag": False},
+            )
 
-        except Exception:
+        # check if provided username already exists
+        if len(matched_users) > 0:
+            return generate_response(
+                status_code=400,
+                message="Username already exists",
+                action="Please try again with a different username",
+                data={"flag": False},
+            )
+
+        # otherwise, create and insert admin into database
+        try:
+            admin = User(
+                username=request.json["username"],
+                password=generate_password_hash(request.json["password"]),
+                name=request.json["fullname"],
+                mobile_no=request.json["mobile_no"],
+                role=enums.UserRole.admin.value,
+            )
+            db.session.add(admin)
+            db.session.commit()
+        except Exception as e:
             return generate_response(
                 status_code=400,
                 message="Failed to add adminstrator",
-                action=f"{traceback.format_exc()}",
+                action=f"Server responded with error: {e}",
                 data={"flag": False},
             )
 
@@ -103,7 +100,41 @@ def addAdmin():
         return generate_response(
             status_code=200,
             message="Successfully added admin",
-            action=f"You have now added the admin '{request.json['username']}'",
+            action=f"You have now added the administrator '{request.json['username']}'",
+            data={"flag": True},
+        )
+
+
+# note: /reset_db route is NOT PUBLICLY visible
+@app.route("/reset_db", methods=["POST"])
+def resetDB():
+    if request.method == "POST":
+        # verify the provided credentials against the superadmin's credentials
+        response = validate_attributes(
+            request.json,
+            ["username", "password"],
+            app.config.get("SUPERADMIN_CREDENTIALS"),
+        )
+        if response.status_code != 200:
+            return response
+
+        # delete and re-initialize schema
+        try:
+            db.drop_all()
+            db.create_all()
+        except Exception as e:
+            return generate_response(
+                status_code=400,
+                message="Failed to reset database",
+                action=f"Server responded with error: {e}",
+                data={"flag": False},
+            )
+
+        # return success JSON
+        return generate_response(
+            status_code=200,
+            message="Successfully reset database",
+            action=f"You have now reset the database",
             data={"flag": True},
         )
 
@@ -153,4 +184,4 @@ def login():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
