@@ -1,21 +1,4 @@
-async function authenticate(username, password) {
-    try {
-        const response = await fetch("/login", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
-            }),
-        });
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        return error;
-    }
-}
+import { postJSON } from "./helpers.js";
 
 function handleAuth() {
     const errorTitle = document.querySelector("#error_title");
@@ -27,7 +10,10 @@ function handleAuth() {
     const password = document.querySelector("#password").value;
 
     if (username && password) {
-        authenticate(username, password).then((response) => {
+        postJSON("/login", {
+            username: username,
+            password: password,
+        }).then((response) => {
             if (response.status_code != 200) {
                 errorTitle.innerHTML = response.message;
                 errorLbl.innerHTML = response.action;
