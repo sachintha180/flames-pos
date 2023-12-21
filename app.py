@@ -3,6 +3,7 @@ from models import db, User
 from helpers import generate_response, validate_attributes
 from flask_bcrypt import generate_password_hash, check_password_hash
 import enums
+import traceback
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///flames.db"
@@ -25,7 +26,7 @@ def initialize():
     else:
         # validate the presence of username and password attributes in payload
         response = validate_attributes(request.json, ["username", "password"])
-        if response["status_code"] != 200:
+        if response.status_code != 200:
             return response
 
         # verify the provided credentials against the superadmin's credentials
@@ -36,7 +37,7 @@ def initialize():
         response = validate_attributes(
             request.json, request.json.keys(), superadmin_creds
         )
-        if response["status_code"] != 200:
+        if response.status_code != 200:
             return response
 
         # return the admin user's default credentials
@@ -63,20 +64,20 @@ def addAdmin():
             response = validate_attributes(
                 request.json, ["username", "password", "name", "mobile_no"]
             )
-            if response["status_code"] != 200:
+            if response.status_code != 200:
                 return response
 
             # check if provided username already exists
             try:
                 db.session.execute(
-                    db.select(User).filter(User.username == response.json["username"])
+                    db.select(User).filter(User.username == request.json["username"])
                 ).scalar_one()
             except:
                 # create and insert admin into database
                 admin = User(
                     username=request.json["username"],
                     password=generate_password_hash(request.json["password"]),
-                    name=request.json["name"],
+                    name=request.json["fullname"],
                     mobile_no=request.json["mobile_no"],
                     role=enums.UserRole.admin.value,
                 )
@@ -90,11 +91,11 @@ def addAdmin():
                     data={"flag": False},
                 )
 
-        except:
+        except Exception:
             return generate_response(
                 status_code=400,
                 message="Failed to add adminstrator",
-                action="Please try again",
+                action=f"{traceback.format_exc()}",
                 data={"flag": False},
             )
 
@@ -114,13 +115,13 @@ def login():
     else:
         # validate the presence of username and password attributes in payload
         response = validate_attributes(request.json, ["username", "password"])
-        if response["status_code"] != 200:
+        if response.status_code != 200:
             return response
 
         # otherwise, get username from database + save to session variable
         try:
             user = db.session.execute(
-                db.select(User).filter(User.username == response.json["username"])
+                db.select(User).filter(User.username == request.json["username"])
             ).scalar_one()
         except:
             return generate_response(
@@ -130,10 +131,11 @@ def login():
                 data={"flag": False},
             )
 
-        session["username"] = response.json["username"]
+        session["username"] = request.json["username"]
+        print(user)
 
         # verify password against saved password
-        if not check_password_hash(user.password, response.json["password"]):
+        if not check_password_hash(user.password, request.json["password"]):
             return generate_response(
                 status_code=401,
                 message="Authentication failed",

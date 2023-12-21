@@ -48,7 +48,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String, nullable=False)
-    name: Mapped[str] = mapped_column(String)
+    name: Mapped[str] = mapped_column(String, nullable=False)
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     role: Mapped[enums.UserRole] = mapped_column(
         Enum(enums.UserRole),
@@ -58,7 +58,7 @@ class User(db.Model):
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
-    last_logged: Mapped[datetime.datetime] = mapped_column(DateTime)
+    last_logged: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)
 
     # foreign key constraints for user-order (1:M) - ON DELETE NO CHANGE
     order: Mapped[List["Order"]] = relationship(back_populates="user")
@@ -75,7 +75,7 @@ class Customer(db.Model):
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     address: Mapped[str] = mapped_column(String, nullable=False)
     city: Mapped[str] = mapped_column(String, nullable=False)
-    email: Mapped[str] = mapped_column(String, unique=True)
+    email: Mapped[str] = mapped_column(String, nullable=True, unique=True)
     registered_at: Mapped[str] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
@@ -100,7 +100,7 @@ class Staff(db.Model):
         server_default=enums.StaffRole.waiter.value,
     )
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
-    email: Mapped[str] = mapped_column(String, unique=True)
+    email: Mapped[str] = mapped_column(String, unique=True, nullable=True)
 
     # foreign key constraint for staff-order (1:1) - ON DELETE NO CHANGE
     order: Mapped["Order"] = relationship(back_populates="staff")
@@ -120,9 +120,9 @@ class Payment(db.Model):
         server_default=enums.PaymentType.cash.value,
     )
     paid: Mapped[float] = mapped_column(Numeric, nullable=False)
-    balance: Mapped[float] = mapped_column(Numeric)
+    balance: Mapped[float] = mapped_column(Numeric, nullable=False)
     paid_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
-    discount: Mapped[float] = mapped_column(Numeric)
+    discount: Mapped[float] = mapped_column(Numeric, nullable=True)
 
     # foreign key constraint for payment-order (1:1) - ON DELETE NO CHANGE
     order: Mapped["Order"] = relationship(back_populates="payment")
@@ -147,7 +147,7 @@ class Order(db.Model):
     # attributes
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     otype: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(String)
+    description: Mapped[str] = mapped_column(String, nullable=True)
     status: Mapped[enums.OrderStatus] = mapped_column(
         Enum(enums.OrderStatus),
         nullable=False,
@@ -156,8 +156,8 @@ class Order(db.Model):
     ordered_at: Mapped[datetime.datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
-    completed_at: Mapped[datetime.datetime] = mapped_column(DateTime)
-    table_no: Mapped[int] = mapped_column(Integer)
+    completed_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)
+    table_no: Mapped[int] = mapped_column(Integer, nullable=True)
 
     # foreign key constraints for order-customer (M:1) - ON DELETE CASCADE
     customer_id: Mapped[int] = mapped_column(
@@ -194,7 +194,7 @@ class Product(db.Model):
     # attributes
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(String)
+    description: Mapped[str] = mapped_column(String, nullable=True)
     price: Mapped[float] = mapped_column(Numeric, nullable=False)
 
     # foreign key constraint for order-product (1:M) - ON DELETE NO CHANGE
