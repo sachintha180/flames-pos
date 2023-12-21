@@ -65,7 +65,7 @@ class User(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"<User {self.username}>"
+        return f"User(id={self.id}, username={self.username}, name={self.name}, role={self.role})"
 
 
 class Customer(db.Model):
@@ -87,7 +87,7 @@ class Customer(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"<Customer {self.name}>"
+        return f"Customer(id={self.id}, name{self.name}, mobile_no={self.mobile_no})"
 
 
 class Staff(db.Model):
@@ -107,7 +107,7 @@ class Staff(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"<Staff {self.name}>"
+        return f"Staff(id={self.id}, name={self.name}, role={self.role}, mobile_no={self.mobile_no})"
 
 
 class Payment(db.Model):
@@ -129,7 +129,7 @@ class Payment(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"<Payment {self.amount}>"
+        return f"Payment(id={self.id}, amount={self.amount}, ptype={self.ptype})"
 
 
 # SQLAlchemy.Core associative table for resolving order-product (M:M) relationship
@@ -187,7 +187,7 @@ class Order(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"<Order {self.id}>"
+        return f"Order(id={self.id}, otype={self.otype}, status={self.status})>"
 
 
 class Product(db.Model):
@@ -204,4 +204,4 @@ class Product(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"<Product {self.name}>"
+        return f"Product(id={self.id}, name={self.name}, price={self.price})>"
