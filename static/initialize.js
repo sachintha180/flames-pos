@@ -52,6 +52,22 @@ function handleAdmin() {
     }
 }
 
+function resetDB() {
+    const errorTitle = document.querySelector("#error_title");
+    const errorLbl = document.querySelector("#error_lbl");
+    errorTitle.innerHTML = "";
+    errorLbl.innerHTML = "";
+
+    let confirm = window.confirm("Are you sure you want to reset the database?");
+    
+    if (confirm) {
+        postJSON("/reset_db", {}).then((response) => {
+            errorTitle.innerHTML = response.message;
+            errorLbl.innerHTML = response.action;
+        });
+    }
+}
+
 function handleAuth() {
     const errorTitle = document.querySelector("#error_title");
     const errorLbl = document.querySelector("#error_lbl");
@@ -73,6 +89,9 @@ function handleAuth() {
                 document
                     .querySelector("#add_admin")
                     .addEventListener("click", handleAdmin);
+                document
+                    .querySelector("#reset_db")
+                    .addEventListener("click", resetDB);
             }
         });
     } else {
@@ -101,7 +120,7 @@ function showConfirmForm(username, admin_default) {
             <label for="password">Mobile No</label>
             <input type="text" id="mobile_no" name="mobile_no" value='${admin_default.mobile_no}' required />
             <input type="button" id="add_admin" name="add_admin" value="Add New Admin" />
-            <input type="button" id="clear_db" name="clear_db" value="Clear Database" />
+            <input type="button" id="reset_db" name="reset_db" value="Reset Database" />
         </form>
     `;
 }
