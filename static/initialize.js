@@ -68,6 +68,7 @@ function handleAuth() {
         }
     }
 }
+
 function handleAdmin() {
     const errorTitle = document.querySelector("#error_title");
     const errorLbl = document.querySelector("#error_lbl");
