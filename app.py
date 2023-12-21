@@ -162,7 +162,6 @@ def login():
             )
 
         session["username"] = request.json["username"]
-        print(user)
 
         # verify password against saved password
         if not check_password_hash(user.password, request.json["password"]):
