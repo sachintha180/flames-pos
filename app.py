@@ -2,11 +2,10 @@ from flask import Flask, render_template, request, session
 from models import db, User
 from helpers import generate_response, validate_attributes
 from flask_bcrypt import generate_password_hash, check_password_hash
-from multiprocessing import cpu_count
 import enums
 
 app = Flask(__name__)
-app.config.from_object("config.DevelopmentConfig")
+app.config.from_object("config.ProductionConfig")
 
 # initialize models.py SQLAlchemy object
 db.init_app(app)
