@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{ url_for('static', filename='scripts/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/menu.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pico.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
@@ -31,8 +31,26 @@
     <section id="menu" class="container">
         <h2>Welcome, {{username}}!</h2>
         <section id="menu_btns" class="grid">
-            <input type="button" id="billing" name="billing" value="Billing">
-            <input type="button" id="exit" name="exit" value="Exit">
+            <div id="billing_btn">
+                <img alt="Billing icon" src="{{ url_for('static', filename='icons/billing.svg') }}" height="100">
+                <p>Billing</p>
+            </div>
+            <div id="analytics_btn">
+                <img alt="Analytics icon" src="{{ url_for('static', filename='icons/analytics.svg') }}" height="100">
+                <p>Analytics</p>
+            </div>
+            <div id="reports_btn">
+                <img alt="Reports icon" src="{{ url_for('static', filename='icons/reports.svg') }}" height="100">
+                <p>Reports</p>
+            </div>
+            <div id="settings_btn">
+                <img alt="Settings icon" src="{{ url_for('static', filename='icons/settings.svg') }}" height="100">
+                <p>Settings</p>
+            </div>
+            <div id="logout_btn">
+                <img alt="Logout icon" src="{{ url_for('static', filename='icons/logout.svg') }}" height="100">
+                <p>Logout</p>
+            </div>
         </section>
     </section>
 

@@ -4,7 +4,7 @@
 :root:not([data-theme="dark"]) {
     --primary: #f4511e;
     --primary-transparent: #f4511ecc;
-    --primary-hover: #e64a19;
+    --primary-hover: #ff5722;
     --primary-focus: rgba(244, 81, 30, 0.125);
     --primary-inverse: #fff;
     --secondary: #56423c;
@@ -118,4 +118,48 @@ body > dialog > article {
 
 body > #spacer {
     min-height: var(--block-spacing-vertical);
+}
+
+body > #menu h2 {
+    padding-bottom: 0.5rem;
+    border-bottom: 5px solid var(--primary);
+}
+
+body > #menu #menu_btns div {
+    background-color: var(--primary);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin: 0.5rem;
+    gap: 1rem;
+    border-radius: var(--border-radius);
+    min-width: 150px;
+    transition: background-color 0.1s ease-in-out;
+}
+
+body > #menu #menu_btns div:nth-child(2n) {
+    background-color: var(--secondary);
+}
+
+body > #menu #menu_btns div:hover {
+    background-color: var(--primary-hover);
+    cursor: pointer;
+}
+
+body > #menu #menu_btns div:nth-child(2n):hover {
+    background-color: var(--secondary-hover);
+}
+
+body > #menu #menu_btns div p {
+    margin: 0;
+    color: var(--primary-inverse);
+    font-size: 1.2rem;
+}
+
+body > #menu #menu_btns div img {
+    width: calc(var(--header-height) / 2);
+    height: calc(var(--header-height) / 2);
+    fill: var(--primary-inverse);
 }

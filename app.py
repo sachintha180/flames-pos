@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect
 from models import db, User
-from helpers import generate_response, validate_attributes
+from helpers import generate_response, validate_attributes, login_required
 from flask_bcrypt import generate_password_hash, check_password_hash
 import enums
 
@@ -146,6 +146,8 @@ def resetDB():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
+        if "username" in session:
+            return redirect("/menu")
         return render_template("login.html")
     else:
         # validate the presence of username and password attributes in payload
@@ -184,6 +186,13 @@ def login():
             action=f"You are now logged into FlamesPOS as '{request.json['username']}'",
             data={"flag": True},
         )
+
+
+@app.route("/menu", methods=["GET", "POST"])
+@login_required
+def menu():
+    if request.method == "GET":
+        return render_template("menu.html", username=session["username"])
 
 
 if __name__ == "__main__":

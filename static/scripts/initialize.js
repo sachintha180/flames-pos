@@ -137,6 +137,9 @@ function showMgmForm(owner_default) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector("#submit").addEventListener("click", handleAuth);
-    document.querySelector("#error_close").addEventListener("click", hideError);
+    const submitBtn = document.querySelector("#submit");
+    submitBtn.addEventListener("click", handleAuth);
+
+    const errorCloseBtn = document.querySelector("#error_close");
+    errorCloseBtn.addEventListener("click", hideError);
 });

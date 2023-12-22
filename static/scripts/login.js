@@ -46,10 +46,9 @@ function handleAuth() {
             username: username,
             password: password,
         }).then((response) => {
-            if (response.status_code != 200) {
-                showError(response.message, response.action);
-            } else {
-                console.log(response);
+            showError(response.message, response.action);
+            if (response.data.flag) {
+                window.location.href = "/menu";
             }
         });
     } else {
@@ -62,6 +61,9 @@ function handleAuth() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector("#submit").addEventListener("click", handleAuth);
-    document.querySelector("#error_close").addEventListener("click", hideError);
+    const submitBtn = document.querySelector("#submit");
+    submitBtn.addEventListener("click", handleAuth);
+
+    const errorCloseBtn = document.querySelector("#error_close");
+    errorCloseBtn.addEventListener("click", hideError);
 });
