@@ -52,12 +52,12 @@ def addOwner():
 
         # query username in database
         try:
-            matched_users = (
-                db.session.scalars(
-                    db.select(User).where(User.username == request.json["username"])
+            matched_users = db.session.scalars(
+                db.select(User).where(
+                    User.username == request.json["username"]
+                    & User.role == enums.UserRole.owner
                 )
-                .all()
-            )
+            ).all()
             print(matched_users)
         except Exception as e:
             return generate_response(
