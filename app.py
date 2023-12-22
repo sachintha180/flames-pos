@@ -58,7 +58,6 @@ def addOwner():
                     & User.role == enums.UserRole.owner
                 )
             ).all()
-            print(matched_users)
         except Exception as e:
             return generate_response(
                 status_code=400,

@@ -14,12 +14,30 @@ async function postJSON(routeURL, jsonObject) {
     }
 }
 
-function handleOwner() {
+function showError(errorMessage, errorAction) {
     const errorTitle = document.querySelector("#error_title");
     const errorLbl = document.querySelector("#error_lbl");
+    const errorModal = document.querySelector("#error");
+
+    errorTitle.innerHTML = errorMessage;
+    errorLbl.innerHTML = errorAction;
+
+    errorModal.setAttribute("open", true);
+}
+
+function hideError() {
+    const errorTitle = document.querySelector("#error_title");
+    const errorLbl = document.querySelector("#error_lbl");
+    const errorModal = document.querySelector("#error");
+
     errorTitle.innerHTML = "";
     errorLbl.innerHTML = "";
 
+    errorModal.removeAttribute("open");
+}
+
+function handleOwner() {
+    hideError();
     const username = document.querySelector("#username").value;
     const password = document.querySelector("#password").value;
     const fullname = document.querySelector("#fullname").value;
@@ -32,31 +50,23 @@ function handleOwner() {
             fullname: fullname,
             mobile_no: mobile_no,
         }).then((response) => {
-            errorTitle.innerHTML = response.message;
-            errorLbl.innerHTML = response.action;
+            showError(response.message, response.action);
         });
     } else {
         if (!username) {
-            errorTitle.innerHTML = "Invalid username";
-            errorLbl.innerHTML = "Please enter a valid username";
+            showError("Invalid username", "Please enter a valid username");
         } else if (!password) {
-            errorTitle.innerHTML = "Invalid password";
-            errorLbl.innerHTML = "Please enter a valid password";
+            showError("Invalid password", "Please enter a valid password");
         } else if (!fullname) {
-            errorTitle.innerHTML = "Invalid fullname";
-            errorLbl.innerHTML = "Please enter a valid fullname";
+            showError("Invalid fullname", "Please enter a valid fullname");
         } else {
-            errorTitle.innerHTML = "Invalid mobile no";
-            errorLbl.innerHTML = "Please enter a valid mobile no";
+            showError("Invalid mobile no", "Please enter a valid mobile no");
         }
     }
 }
 
 function resetDB(username, password) {
-    const errorTitle = document.querySelector("#error_title");
-    const errorLbl = document.querySelector("#error_lbl");
-    errorTitle.innerHTML = "";
-    errorLbl.innerHTML = "";
+    hideError();
 
     let confirm = window.confirm(
         "Are you sure you want to reset the database?"
@@ -67,17 +77,13 @@ function resetDB(username, password) {
             username: username,
             password: password,
         }).then((response) => {
-            errorTitle.innerHTML = response.message;
-            errorLbl.innerHTML = response.action;
+            showError(response.message, response.action);
         });
     }
 }
 
 function handleAuth() {
-    const errorTitle = document.querySelector("#error_title");
-    const errorLbl = document.querySelector("#error_lbl");
-    errorTitle.innerHTML = "";
-    errorLbl.innerHTML = "";
+    hideError();
 
     const username = document.querySelector("#username").value;
     const password = document.querySelector("#password").value;
@@ -87,8 +93,7 @@ function handleAuth() {
             username: username,
             password: password,
         }).then((response) => {
-            errorTitle.innerHTML = response.message;
-            errorLbl.innerHTML = response.action;
+            showError(response.message, response.action);
             if (response.data.flag) {
                 showMgmForm(response.data.owner_default);
                 document
@@ -103,11 +108,9 @@ function handleAuth() {
         });
     } else {
         if (!username) {
-            errorTitle.innerHTML = "Invalid username";
-            errorLbl.innerHTML = "Please enter a valid username";
+            showError("Invalid username", "Please enter a valid username");
         } else {
-            errorTitle.innerHTML = "Invalid password";
-            errorLbl.innerHTML = "Please enter a valid password";
+            showError("Invalid password", "Please enter a valid password");
         }
     }
 }
@@ -133,4 +136,5 @@ function showMgmForm(owner_default) {
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#submit").addEventListener("click", handleAuth);
+    document.querySelector("#error_close").addEventListener("click", hideError);
 });
