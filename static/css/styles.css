@@ -1,0 +1,103 @@
+/* Deep-orange Light scheme (Default) */
+/* Can be forced with data-theme="light" */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+    --primary: #f4511e;
+    --primary-transparent: #f4511ecc;
+    --primary-hover: #e64a19;
+    --primary-focus: rgba(244, 81, 30, 0.125);
+    --primary-inverse: #fff;
+    --secondary: #aa0000;
+    --secondary-hover: #990000;
+    --secondary-focus: rgba(170, 0, 0, 0.125);
+    --secondary-inverse: #fff;
+}
+
+/* Deep-orange Dark scheme (Auto) */
+/* Automatically enabled if user has Dark mode enabled */
+@media only screen and (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --primary: #f4511e;
+        --primary-hover: #ff5722;
+        --primary-focus: rgba(244, 81, 30, 0.25);
+        --primary-inverse: #fff;
+        --secondary: #aa0000;
+        --secondary-hover: #990000;
+        --secondary-focus: rgba(170, 0, 0, 0.125);
+        --secondary-inverse: #fff;
+    }
+}
+
+/* Deep-orange Dark scheme (Forced) */
+/* Enabled if forced with data-theme="dark" */
+[data-theme="dark"] {
+    --primary: #f4511e;
+    --primary-hover: #ff5722;
+    --primary-focus: rgba(244, 81, 30, 0.25);
+    --primary-inverse: #fff;
+    --secondary: #aa0000;
+    --secondary-hover: #990000;
+    --secondary-focus: rgba(170, 0, 0, 0.125);
+    --secondary-inverse: #fff;
+}
+
+/* Deep-orange (Common styles) */
+:root {
+    --form-element-active-border-color: var(--primary);
+    --form-element-focus-color: var(--primary-focus);
+    --switch-color: var(--primary-inverse);
+    --switch-checked-background-color: var(--primary);
+}
+
+html > body {
+    padding: 1rem;
+}
+
+body > header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.2rem 1rem;
+    height: 10vh;
+    width: 100vw;
+    margin: -1rem;
+    background-color: var(--primary-transparent);
+    box-shadow: 0 0 20px 5px #333333aa;
+}
+
+body > header video {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: inherit;
+    object-fit: cover;
+}
+
+body > header h1 {
+    margin: 0;
+    color: #fff;
+}
+
+body > header img {
+    background-color: white;
+    margin: -1rem;
+    width: 10vh;
+    height: 10vh;
+}
+
+body > footer {
+    background-color: #333;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+}
+
+body > footer p {
+    color: #fff;
+    font-size: 0.8rem;
+    margin: 0;
+}
