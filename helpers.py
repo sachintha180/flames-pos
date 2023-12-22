@@ -68,13 +68,13 @@ def validate_attributes(attribute_dict, attribute_list, target_dict=None):
                     data={"flag": False},
                 )
 
-        # otherwise, return simple success response (since truthy responses are customized to the caller)
-        return generate_response(
-            status_code=200,
-            message="Success",
-            action="",
-            data={"flag": True},
-        )
+    # otherwise, return simple success response (since truthy responses are customized to the caller)
+    return generate_response(
+        status_code=200,
+        message="Success",
+        action="",
+        data={"flag": True},
+    )
 
 
 def verify_user(user_dict):
