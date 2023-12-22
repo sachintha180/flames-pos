@@ -12,7 +12,7 @@ class Config(object):
     TESTING = False
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    MAX_ERROR_LENGTH = 100
+    MAX_ERROR_LENGTH = 500
     SUPERADMIN_DEFAULT = {
         "username": "superadmin",
         "password": "admin123",

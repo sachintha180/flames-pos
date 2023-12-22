@@ -81,7 +81,11 @@ body > header video {
 
 body > header h1 {
     margin: 0;
+}
+
+body > header h1 a {
     color: var(--primary-inverse);
+    text-decoration: none;
 }
 
 body > header img {
@@ -91,7 +95,12 @@ body > header img {
     height: var(--header-height);
 }
 
+body > section {
+    margin-bottom: 0;
+}
+
 body > footer {
+    text-align: center;
     background-color: var(--tertiary);
     position: fixed;
     bottom: 0;
@@ -103,4 +112,12 @@ body > footer p {
     color: var(--primary-inverse);
     font-size: 0.8rem;
     margin: 0;
+}
+
+body > dialog > article {
+    min-width: 50vw;
+}
+
+body > #spacer {
+    min-height: var(--block-spacing-vertical);
 }

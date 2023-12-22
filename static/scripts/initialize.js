@@ -128,8 +128,10 @@ function showMgmForm(owner_default) {
             <input type="text" id="fullname" name="fullname" value='${owner_default.fullname}'required />
             <label for="password">Mobile No</label>
             <input type="text" id="mobile_no" name="mobile_no" value='${owner_default.mobile_no}' required />
-            <input type="button" id="add_owner" name="add_owner" value="Add New Owner" />
-            <input type="button" id="reset_db" name="reset_db" value="Reset Database" />
+            <section id="form_btns" class="grid">
+                <input type="button" id="add_owner" name="add_owner" value="Add New Owner" />
+                <input type="button" id="reset_db" name="reset_db" value="Reset Database" />
+            </section>
         </form>
     `;
 }

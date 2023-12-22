@@ -13,7 +13,7 @@
 
 <body>
     <header>
-        <h1>FlamesPOS</h1>
+        <h1><a href="{{ url_for('login') }}">FlamesPOS</a></h1>
         <img alt="Flames Pizzeria logo" src="{{ url_for('static', filename='images/flames_logo.svg') }}" height="100">
         <video src="{{ url_for('static', filename='videos/fireplace.mp4') }}" autoplay muted loop height="500"></video>
     </header>
@@ -29,16 +29,20 @@
     </dialog>
 
     <section id="login" class="container">
-        <h2>Login</h2>
+        <h2>Login to FlamesPOS</h2>
         <form id="login_form">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required>
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
-            <input type="button" id="submit" name="submit" value="Submit">
-            <input type="button" id="exit" name="exit" value="Exit">
+            <section id="form_btns" class="grid">
+                <input type="button" id="submit" name="submit" value="Submit">
+                <input type="button" id="exit" name="exit" value="Exit">
+            </section>
         </form>
     </section>
+
+    <section id="spacer"></section>
 
     <footer>
         <p>Designed and Developed by D&S Software Solutions</p>
