@@ -62,7 +62,7 @@ def addOwner():
             return generate_response(
                 status_code=400,
                 message="Failed to check owner",
-                action=f"Server responded with error: {e[:app.config.get('MAX_ERROR_LENGTH')]}",
+                action=f"Server responded with error: {str(e)[:app.config.get('MAX_ERROR_LENGTH')]}",
                 data={"flag": False},
             )
 
@@ -90,7 +90,7 @@ def addOwner():
             return generate_response(
                 status_code=400,
                 message="Failed to add owner",
-                action=f"Server responded with error: {e[:app.config.get('MAX_ERROR_LENGTH')]}",
+                action=f"Server responded with error: {str(e)[:app.config.get('MAX_ERROR_LENGTH')]}",
                 data={"flag": False},
             )
 
@@ -124,7 +124,7 @@ def resetDB():
             return generate_response(
                 status_code=400,
                 message="Failed to reset database",
-                action=f"Server responded with error: {e[:app.config.get('MAX_ERROR_LENGTH')]}",
+                action=f"Server responded with error: {str(e)[:app.config.get('MAX_ERROR_LENGTH')]}",
                 data={"flag": False},
             )
 
