@@ -54,15 +54,19 @@ def addOwner():
         try:
             matched_users = db.session.scalars(
                 db.select(User).where(
-                    User.username == request.json["username"]
-                    & User.role == enums.UserRole.owner
+                    db.and_(
+                        User.username == request.json["username"],
+                        User.role == enums.UserRole.owner,
+                    )
                 )
             ).all()
         except Exception as e:
+            print(e)
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
             return generate_response(
                 status_code=400,
                 message="Failed to check owner",
-                action=f"Server responded with error: {str(e)[:app.config.get('MAX_ERROR_LENGTH')]}",
+                action=f"Server responded with error: {error}",
                 data={"flag": False},
             )
 
@@ -87,10 +91,11 @@ def addOwner():
             db.session.add(owner)
             db.session.commit()
         except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
             return generate_response(
                 status_code=400,
                 message="Failed to add owner",
-                action=f"Server responded with error: {str(e)[:app.config.get('MAX_ERROR_LENGTH')]}",
+                action=f"Server responded with error: {error}",
                 data={"flag": False},
             )
 
@@ -121,10 +126,11 @@ def resetDB():
             db.drop_all()
             db.create_all()
         except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
             return generate_response(
                 status_code=400,
                 message="Failed to reset database",
-                action=f"Server responded with error: {str(e)[:app.config.get('MAX_ERROR_LENGTH')]}",
+                action=f"Server responded with error: {error}",
                 data={"flag": False},
             )
 
@@ -175,7 +181,7 @@ def login():
         return generate_response(
             status_code=200,
             message="Login successful",
-            action="You are now logged in",
+            action=f"You are now logged into FlamesPOS as '{request.json['username']}'",
             data={"flag": True},
         )
 
