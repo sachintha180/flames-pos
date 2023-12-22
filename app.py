@@ -25,27 +25,27 @@ def initialize():
         response = validate_attributes(
             request.json,
             ["username", "password"],
-            app.config.get("SUPERADMIN_CREDENTIALS"),
+            app.config.get("SUPERADMIN"),
         )
         if response.status_code != 200:
             return response
 
-        # return the admin user's default credentials
+        # return the owner's default credentials
         return generate_response(
             status_code=200,
             message="Login successful",
             action="You are now authenticated as superadmin",
-            data={"admin_default": app.config.get("ADMIN_DEFAULT_CREDS"), "flag": True},
+            data={"owner_default": app.config.get("OWNER_DEFAULT"), "flag": True},
         )
 
 
-# note: /add_admin route is NOT PUBLICLY visible
-@app.route("/add_admin", methods=["POST"])
-def addAdmin():
+# note: /add_owner route is NOT PUBLICLY visible
+@app.route("/add_owner", methods=["POST"])
+def addOwner():
     if request.method == "POST":
         # validate the presence of User model attributes in payload
         response = validate_attributes(
-            request.json, ["username", "password", "name", "mobile_no"]
+            request.json, ["username", "password", "fullname", "mobile_no"]
         )
         if response.status_code != 200:
             return response
@@ -53,17 +53,17 @@ def addAdmin():
         # query username in database
         try:
             matched_users = (
-                db.session.execute(
-                    db.select(User).filter(User.username == request.json["username"])
+                db.session.scalars(
+                    db.select(User).where(User.username == request.json["username"])
                 )
-                .scalars()
                 .all()
             )
+            print(matched_users)
         except Exception as e:
             return generate_response(
                 status_code=400,
-                message="Failed to check adminstrator",
-                action=f"Server responded with error: {e}",
+                message="Failed to check owner",
+                action=f"Server responded with error: {e[:app.config.get('MAX_ERROR_LENGTH')]}",
                 data={"flag": False},
             )
 
@@ -71,35 +71,35 @@ def addAdmin():
         if len(matched_users) > 0:
             return generate_response(
                 status_code=400,
-                message="Username already exists",
+                message="Owner already exists",
                 action="Please try again with a different username",
                 data={"flag": False},
             )
 
-        # otherwise, create and insert admin into database
+        # otherwise, create and insert owner into database
         try:
-            admin = User(
+            owner = User(
                 username=request.json["username"],
                 password=generate_password_hash(request.json["password"]),
-                name=request.json["fullname"],
+                fullname=request.json["fullname"],
                 mobile_no=request.json["mobile_no"],
-                role=enums.UserRole.admin.value,
+                role=enums.UserRole.owner.value,
             )
-            db.session.add(admin)
+            db.session.add(owner)
             db.session.commit()
         except Exception as e:
             return generate_response(
                 status_code=400,
-                message="Failed to add adminstrator",
-                action=f"Server responded with error: {e}",
+                message="Failed to add owner",
+                action=f"Server responded with error: {e[:app.config.get('MAX_ERROR_LENGTH')]}",
                 data={"flag": False},
             )
 
         # otherwise, return success JSON
         return generate_response(
             status_code=200,
-            message="Successfully added admin",
-            action=f"You have now added the administrator '{request.json['username']}'",
+            message="Successfully added owner",
+            action=f"You have now added the owner '{request.json['username']}'",
             data={"flag": True},
         )
 
@@ -112,7 +112,7 @@ def resetDB():
         response = validate_attributes(
             request.json,
             ["username", "password"],
-            app.config.get("SUPERADMIN_CREDENTIALS"),
+            app.config.get("SUPERADMIN"),
         )
         if response.status_code != 200:
             return response
@@ -125,7 +125,7 @@ def resetDB():
             return generate_response(
                 status_code=400,
                 message="Failed to reset database",
-                action=f"Server responded with error: {e}",
+                action=f"Server responded with error: {e[:app.config.get('MAX_ERROR_LENGTH')]}",
                 data={"flag": False},
             )
 

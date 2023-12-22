@@ -18,12 +18,16 @@
         <video src="{{ url_for('static', filename='videos/fireplace.mp4') }}" autoplay muted loop height="500"></video>
     </header>
 
-    <section id="error">
-        <h3 id="error_title"></h3>
+    <dialog id="error">
+        <h3 id="error_title"></header>
         <p id="error_lbl"></p>
-    </section>
+        <footer>
+            <a href="#" role="button">OK</a>
+          </footer>
+        </article>
+    </dialog>
 
-    <section id="login">
+    <section id="login" class="container">
         <h2>Login</h2>
         <form id="login_form">
             <label for="username">Username</label>

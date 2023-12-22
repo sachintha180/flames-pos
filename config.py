@@ -12,16 +12,17 @@ class Config(object):
     TESTING = False
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SUPERADMIN_CREDS = {
+    MAX_ERROR_LENGTH = 100
+    SUPERADMIN_DEFAULT = {
         "username": "superadmin",
         "password": "admin123",
     }
-    ADMIN_DEFAULT_CREDS = {
+    OWNER_DEFAULT = {
         "username": "admin",
         "password": "Pi$$a@456",
-        "name": "Flames POS Administrator",
+        "fullname": "Flames POS Administrator",
         "mobile_no": "0121231234",
-        "role": "admin",
+        "role": "owner",
     }
 
 

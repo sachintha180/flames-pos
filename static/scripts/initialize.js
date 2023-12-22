@@ -14,7 +14,7 @@ async function postJSON(routeURL, jsonObject) {
     }
 }
 
-function handleAdmin() {
+function handleOwner() {
     const errorTitle = document.querySelector("#error_title");
     const errorLbl = document.querySelector("#error_lbl");
     errorTitle.innerHTML = "";
@@ -26,7 +26,7 @@ function handleAdmin() {
     const mobile_no = document.querySelector("#mobile_no").value;
 
     if (username && password && fullname && mobile_no) {
-        postJSON("/add_admin", {
+        postJSON("/add_owner", {
             username: username,
             password: password,
             fullname: fullname,
@@ -90,10 +90,10 @@ function handleAuth() {
             errorTitle.innerHTML = response.message;
             errorLbl.innerHTML = response.action;
             if (response.data.flag) {
-                showConfirmForm(username, response.data.admin_default);
+                showMgmForm(response.data.owner_default);
                 document
-                    .querySelector("#add_admin")
-                    .addEventListener("click", handleAdmin);
+                    .querySelector("#add_owner")
+                    .addEventListener("click", handleOwner);
                 document
                     .querySelector("#reset_db")
                     .addEventListener("click", () => {
@@ -112,21 +112,20 @@ function handleAuth() {
     }
 }
 
-function showConfirmForm(username, admin_default) {
-    const adminContainer = document.querySelector("#admin");
-    adminContainer.innerHTML = `
-        <h2>Welcome ${username}</h2>
-        <h3>Admin Details</h3>
+function showMgmForm(owner_default) {
+    const mgmContainer = document.querySelector("#manage");
+    mgmContainer.innerHTML = `
+        <h3>Manage FlamesPOS</h3>
         <form id="confirm_form">
             <label for="username">Username</label>  
-            <input type="text" id="username" name="username" value="${admin_default.username}" required />
+            <input type="text" id="username" name="username" value="${owner_default.username}" required />
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" value='${admin_default.password}' required />
+            <input type="password" id="password" name="password" value='${owner_default.password}' required />
             <label for="password">Full Name</label>
-            <input type="text" id="fullname" name="fullname" value='${admin_default.name}'required />
+            <input type="text" id="fullname" name="fullname" value='${owner_default.fullname}'required />
             <label for="password">Mobile No</label>
-            <input type="text" id="mobile_no" name="mobile_no" value='${admin_default.mobile_no}' required />
-            <input type="button" id="add_admin" name="add_admin" value="Add New Admin" />
+            <input type="text" id="mobile_no" name="mobile_no" value='${owner_default.mobile_no}' required />
+            <input type="button" id="add_owner" name="add_owner" value="Add New Owner" />
             <input type="button" id="reset_db" name="reset_db" value="Reset Database" />
         </form>
     `;

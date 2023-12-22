@@ -48,7 +48,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String, nullable=False)
-    name: Mapped[str] = mapped_column(String, nullable=False)
+    fullname: Mapped[str] = mapped_column(String, nullable=False)
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     role: Mapped[enums.UserRole] = mapped_column(
         Enum(enums.UserRole),
@@ -65,13 +65,13 @@ class User(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"User(id={self.id}, username={self.username}, name={self.name}, role={self.role})"
+        return f"User(id={self.id}, username={self.username}, fullname={self.fullname}, role={self.role})"
 
 
 class Customer(db.Model):
     # attributes
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String, nullable=False)
+    fullname: Mapped[str] = mapped_column(String, nullable=False)
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     address: Mapped[str] = mapped_column(String, nullable=False)
     city: Mapped[str] = mapped_column(String, nullable=False)
@@ -87,13 +87,13 @@ class Customer(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"Customer(id={self.id}, name{self.name}, mobile_no={self.mobile_no})"
+        return f"Customer(id={self.id}, fullname={self.fullname}, mobile_no={self.mobile_no})"
 
 
 class Staff(db.Model):
     # attributes
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String, nullable=False)
+    fullname: Mapped[str] = mapped_column(String, nullable=False)
     role: Mapped[enums.StaffRole] = mapped_column(
         Enum(enums.StaffRole),
         nullable=False,
@@ -107,7 +107,7 @@ class Staff(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"Staff(id={self.id}, name={self.name}, role={self.role}, mobile_no={self.mobile_no})"
+        return f"Staff(id={self.id}, fullname={self.fullname}, role={self.role}, mobile_no={self.mobile_no})"
 
 
 class Payment(db.Model):

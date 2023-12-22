@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap");
+
 /* Deep-orange Light scheme (Default) */
 /* Can be forced with data-theme="light" */
 [data-theme="light"],
@@ -7,10 +9,11 @@
     --primary-hover: #e64a19;
     --primary-focus: rgba(244, 81, 30, 0.125);
     --primary-inverse: #fff;
-    --secondary: #aa0000;
-    --secondary-hover: #990000;
-    --secondary-focus: rgba(170, 0, 0, 0.125);
-    --secondary-inverse: #fff;
+    --secondary: #56423c;
+    --secondary-hover: #493932;
+    --secondary-focus: rgba(86, 66, 60, 0.125);
+    --tertiary: #333;
+    --tertiary-transparent: #333333cc;
 }
 
 /* Deep-orange Dark scheme (Auto) */
@@ -21,10 +24,9 @@
         --primary-hover: #ff5722;
         --primary-focus: rgba(244, 81, 30, 0.25);
         --primary-inverse: #fff;
-        --secondary: #aa0000;
-        --secondary-hover: #990000;
-        --secondary-focus: rgba(170, 0, 0, 0.125);
-        --secondary-inverse: #fff;
+        --secondary: #56423c;
+        --secondary-hover: #493932;
+        --secondary-focus: rgba(86, 66, 60, 0.125);
     }
 }
 
@@ -35,10 +37,9 @@
     --primary-hover: #ff5722;
     --primary-focus: rgba(244, 81, 30, 0.25);
     --primary-inverse: #fff;
-    --secondary: #aa0000;
-    --secondary-hover: #990000;
-    --secondary-focus: rgba(170, 0, 0, 0.125);
-    --secondary-inverse: #fff;
+    --secondary: #56423c;
+    --secondary-hover: #493932;
+    --secondary-focus: rgba(86, 66, 60, 0.125);
 }
 
 /* Deep-orange (Common styles) */
@@ -47,6 +48,7 @@
     --form-element-focus-color: var(--primary-focus);
     --switch-color: var(--primary-inverse);
     --switch-checked-background-color: var(--primary);
+    --header-height: 10vh;
 }
 
 html > body {
@@ -59,11 +61,12 @@ body > header {
     justify-content: space-between;
     align-items: center;
     padding: 0.2rem 1rem;
-    height: 10vh;
+    height: var(--header-height);
     width: 100vw;
     margin: -1rem;
+    margin-bottom: var(--block-spacing-vertical);
     background-color: var(--primary-transparent);
-    box-shadow: 0 0 20px 5px #333333aa;
+    box-shadow: 0 0 20px 5px var(--tertiary-transparent);
 }
 
 body > header video {
@@ -78,18 +81,18 @@ body > header video {
 
 body > header h1 {
     margin: 0;
-    color: #fff;
+    color: var(--primary-inverse);
 }
 
 body > header img {
-    background-color: white;
+    background-color: var(--primary-inverse);
     margin: -1rem;
-    width: 10vh;
-    height: 10vh;
+    width: var(--header-height);
+    height: var(--header-height);
 }
 
 body > footer {
-    background-color: #333;
+    background-color: var(--tertiary);
     position: fixed;
     bottom: 0;
     left: 0;
@@ -97,7 +100,7 @@ body > footer {
 }
 
 body > footer p {
-    color: #fff;
+    color: var(--primary-inverse);
     font-size: 0.8rem;
     margin: 0;
 }
