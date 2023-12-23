@@ -3,6 +3,9 @@ function handleAuth() {
     const username = document.querySelector("#username").value;
     const password = document.querySelector("#password").value;
 
+    const submitBtn = document.querySelector("#submit");
+    setBtnBusy(submitBtn, true);
+
     if (username && password) {
         postJSON("/login", {
             username: username,
@@ -20,6 +23,8 @@ function handleAuth() {
             showError("Invalid password", "Please enter a valid password");
         }
     }
+
+    setBtnBusy(submitBtn, false);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

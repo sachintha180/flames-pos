@@ -5,6 +5,9 @@ function handleOwner() {
     const fullname = document.querySelector("#fullname").value;
     const mobile_no = document.querySelector("#mobile_no").value;
 
+    const addOwnerBtn = document.querySelector("#add_owner");
+    setBtnBusy(addOwnerBtn, true);
+
     if (username && password && fullname && mobile_no) {
         postJSON("/add_owner", {
             username: username,
@@ -25,15 +28,20 @@ function handleOwner() {
             showError("Invalid mobile no", "Please enter a valid mobile no");
         }
     }
+
+    setBtnBusy(addOwnerBtn, false);
 }
 
 function resetDB(username, password) {
     hideError();
 
+    const resetDBBtn = document.querySelector("#reset_db");
+    setBtnBusy(resetDBBtn, true);
+
     let confirm = window.confirm(
         "Are you sure you want to reset the database?"
     );
-
+    
     if (confirm) {
         postJSON("/reset_db", {
             username: username,
@@ -42,13 +50,17 @@ function resetDB(username, password) {
             showError(response.message, response.action, response.data.flag);
         });
     }
+
+    setBtnBusy(resetDBBtn, false);
 }
 
 function handleAuth() {
     hideError();
-
     const username = document.querySelector("#username").value;
     const password = document.querySelector("#password").value;
+
+    const submitBtn = document.querySelector("#submit");
+    setBtnBusy(submitBtn, true);
 
     if (username && password) {
         postJSON("/initialize", {
@@ -75,6 +87,8 @@ function handleAuth() {
             showError("Invalid password", "Please enter a valid password");
         }
     }
+
+    setBtnBusy(submitBtn, false);
 }
 
 function showMgmForm(owner_default) {
@@ -91,8 +105,8 @@ function showMgmForm(owner_default) {
             <label for="password">Mobile No</label>
             <input type="text" id="mobile_no" name="mobile_no" value='${owner_default.mobile_no}' required />
             <section id="form_btns" class="grid">
-                <input type="button" id="add_owner" name="add_owner" value="Add New Owner" />
-                <input type="button" id="reset_db" name="reset_db" value="Reset Database" />
+                <button type="button" id="add_owner" name="add_owner">Add New Owner</button>
+                <button type="button" id="reset_db" name="reset_db">Reset Database</button>
             </section>
         </form>
     `;
