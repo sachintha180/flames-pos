@@ -34,7 +34,7 @@ def initialize():
         return generate_response(
             status_code=200,
             message="Login successful",
-            action="You are now authenticated as superadmin",
+            action=f"You are now authenticated as '{request.json['username']}'",
             data={"owner_default": app.config.get("OWNER_DEFAULT"), "flag": True},
         )
 
