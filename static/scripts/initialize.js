@@ -39,7 +39,7 @@ function resetDB(username, password) {
     setBtnBusy(resetDBBtn, true);
 
     let confirm = window.confirm(
-        "Are you sure you want to reset the database?"
+        "Are you sure you want to reset the database? This action cannot be undone."
     );
     
     if (confirm) {

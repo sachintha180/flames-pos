@@ -44,7 +44,11 @@
     --header-width: 100vw;
     --menu-btn-min-width: 150px;
     --success: #4caf50;
+    --success-hover: #43a047;
+    --success-focus: rgba(76, 175, 80, 0.25);
     --error: #f44336;
+    --error-hover: #e53935;
+    --error-focus: rgba(244, 67, 54, 0.25);
     --font-family: "San Francisco UI", sans-serif;
 }
 
@@ -61,7 +65,6 @@ html > body {
 body > header {
     display: flex;
     flex-flow: row nowrap;
-    justify-content: space-between;
     align-items: center;
     padding: var(--spacing);
     height: var(--header-height);
@@ -91,16 +94,25 @@ body > header h1 a {
     text-decoration: none;
 }
 
-body > header img {
+body > header #logo {
     background-color: var(--primary-inverse);
     margin: calc(var(--spacing) * -1);
     width: var(--header-height);
     height: var(--header-height);
+    margin-left: auto;
+}
+
+body > header #version_no {
+    color: var(--secondary);
+    background-color: var(--primary-inverse);
+    padding: 0 var(--spacing);
+    border-radius: var(--border-radius);
+    margin: 0 var(--spacing);
 }
 
 body > section {
     width: var(--header-width);
-    margin: 0 calc(var(--spacing) * -1);
+    margin: calc(var(--spacing) * -1);
     padding-bottom: calc(var(--spacing) * 2);
 }
 
@@ -139,6 +151,16 @@ body > dialog > article > h4 {
 
 body > dialog > article > h3 {
     margin-bottom: var(--spacing);
+}
+
+body > #menu h2 {
+    margin-bottom: calc(var(--spacing) * 0.5);
+}
+
+body > #menu small {
+    display: block;
+    margin-bottom: calc(var(--spacing) * 3);
+    color: var(--tertiary-transparent);
 }
 
 body > #menu #menu_btns div {

@@ -28,6 +28,12 @@ function handleAuth() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    showError(
+        "You have logged out",
+        "Please login to FlamesPOS again to continue",
+        false
+    );
+
     const submitBtn = document.querySelector("#submit");
     submitBtn.addEventListener("click", handleAuth);
 

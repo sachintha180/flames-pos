@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request, session, redirect
 from models import db, User
-from helpers import generate_response, validate_attributes, login_required
+from helpers import (
+    generate_response,
+    get_random_quote,
+    validate_attributes,
+    login_required,
+)
 from flask_bcrypt import generate_password_hash, check_password_hash
 import enums
 
@@ -15,11 +20,16 @@ with app.app_context():
     db.create_all()
 
 
+@app.route("/", methods=["GET"])
+def index():
+    return redirect("login")
+
+
 # note: /initialize route is NOT PUBLICLY visible
 @app.route("/initialize", methods=["GET", "POST"])
 def initialize():
     if request.method == "GET":
-        return render_template("initialize.html")
+        return render_template("initialize.html", version=app.config.get("VERSION"))
     else:
         # verify the provided credentials against the superadmin's credentials
         response = validate_attributes(
@@ -148,7 +158,7 @@ def login():
     if request.method == "GET":
         if "username" in session:
             return redirect("/menu")
-        return render_template("login.html")
+        return render_template("login.html", version=app.config.get("VERSION"))
     else:
         # validate the presence of username and password attributes in payload
         response = validate_attributes(request.json, ["username", "password"])
@@ -192,7 +202,12 @@ def login():
 @login_required
 def menu():
     if request.method == "GET":
-        return render_template("menu.html", username=session["username"])
+        return render_template(
+            "menu.html",
+            version=app.config.get("VERSION"),
+            username=session["username"],
+            quote=get_random_quote(),
+        )
 
 
 if __name__ == "__main__":

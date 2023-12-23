@@ -24,6 +24,7 @@ class Config(object):
         "mobile_no": "0121231234",
         "role": "owner",
     }
+    VERSION = "1.0.1"
 
 
 class ProductionConfig(Config):
