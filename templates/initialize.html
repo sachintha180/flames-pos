@@ -1,49 +1,22 @@
-<!DOCTYPE html>
-<html data-theme="light" lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="{{ url_for('static', filename='scripts/initialize.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pico.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
-    <title>Initialize: Flames POS</title>
-</head>
+{% block script %}
+<script src="{{ url_for('static', filename='scripts/initialize.js') }}"></script>
+{% endblock %}
 
-<body>
-    <header>
-        <h1><a href="{{ url_for('login') }}">FlamesPOS</a></h1>
-        <img alt="Flames Pizzeria logo" src="{{ url_for('static', filename='images/flames_logo.svg') }}" height="100">
-        <video src="{{ url_for('static', filename='videos/fireplace.mp4') }}" autoplay muted loop height="500"></video>
-    </header>
+{% block title %}
+<title>Initialize: Flames POS</title>
+{% endblock %}
 
-    <dialog id="error">
-        <article>
-            <h3 id="error_title"></h3>
-            <p id="error_lbl"></p>
-            <footer>
-                <a id="error_close" href="#" role="button">OK</a>
-            </footer>
-        </article>
-    </dialog>
-
-    <section id="manage" class="container">
-        <h2>Login as super admin to continue</h2>
-        <form id="auth_form">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required />
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
-            <input type="button" id="submit" name="submit" value="Submit" />
-        </form>
-    </section>
-
-    <section id="spacer"></section>
-
-    <footer>
-        <p>Designed and Developed by D&S Software Solutions</p>
-    </footer>
-</body>
-
-</html>
+{% block main %}
+<section id="manage" class="container">
+    <h2>Login as super admin to continue</h2>
+    <form id="auth_form">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required />
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+        <input type="button" id="submit" name="submit" value="Submit" />
+    </form>
+</section>
+{% endblock %}
