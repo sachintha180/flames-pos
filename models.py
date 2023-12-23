@@ -50,6 +50,7 @@ class User(db.Model):
     password: Mapped[str] = mapped_column(String, nullable=False)
     fullname: Mapped[str] = mapped_column(String, nullable=False)
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
+    email: Mapped[str] = mapped_column(String, nullable=True, unique=True)
     role: Mapped[enums.UserRole] = mapped_column(
         Enum(enums.UserRole),
         nullable=False,
