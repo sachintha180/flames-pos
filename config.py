@@ -10,7 +10,8 @@ from datetime import timedelta
 class Config(object):
     DEBUG = False
     TESTING = False
-    PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
+    SESSION_PERMANENT = True
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=5)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAX_ERROR_LENGTH = 500
     SUPERADMIN_DEFAULT = {

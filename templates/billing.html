@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='scripts/billing.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+<title>Billing: Flames POS</title>
+{% endblock %}
+
+{% block main %}
+<section id="billing" class="container">
+    <section id="bill" class="container">
+        <h2>Bill</h2>
+        <section id="items" class="container">
+            <div class="item" class="container">
+                <p class="id">item.id</p>
+                <p class="name">item.name</p>
+                <p class="price">item.price</p>
+                <p class="quantity">item.quantity</p>
+                <button type="button" id="remove" name="remove">Remove</button>
+            </div>
+        </section>
+        <section id="total" class="container">
+            <p class="subtotal">subtotal</p>
+            <p class="discount">discount</p>
+            <p class="service_charge">service</p>
+            <p class="value_added_tax">value_added_tax</p>
+            <p class="delivery_charge">delivery_charge</p>
+            <p class="total">total</p>
+            <p class="paid">paid</p>
+            <p class="balance">balance</p>
+        </section>
+    </section>
+    <section id="products" class="container">
+        <h2>Products</h2>
+        <div class="product" class="container">
+            <p class="id">product.id</p>
+            <p class="name">product.name</p>
+            <p class="description">product.description</p>
+            <p class="price">product.price</p>
+            <img alt="Triangle icon" src="{{ url_for('static', filename='icons/triangle.svg') }}" height="100">
+        </div>
+    </section>
+    <section id="control" class="container">
+        <div id="table_order_btn">
+            <img alt="Table order icon" src="{{ url_for('static', filename='icons/table.svg') }}" height="100">
+            <p>Table Order</p>
+        </div>
+        <div id="take_away_btn">
+            <img alt="Take away icon" src="{{ url_for('static', filename='icons/logout.svg') }}" height="100">
+            <p>Take Away</p>
+        </div>
+        <div id="delivery_btn">
+            <img alt="Delivery icon" src="{{ url_for('static', filename='icons/delivery.svg') }}" height="100">
+            <p>Delivery</p>
+        </div>
+        <div id="save_btn">
+            <img alt="Save icon" src="{{ url_for('static', filename='icons/save.svg') }}" height="100">
+            <p>Save Order</p>
+        </div>
+    </section>
+</section>
+{% endblock %}

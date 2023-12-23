@@ -154,13 +154,23 @@ body > dialog > article > h3 {
 }
 
 body > #menu h2 {
-    margin-bottom: calc(var(--spacing) * 0.5);
+    margin-bottom: var(--spacing);
 }
 
-body > #menu small {
+body > #menu #quote {
     display: block;
     margin-bottom: calc(var(--spacing) * 3);
     color: var(--tertiary-transparent);
+}
+
+body > #menu #user_type {
+    display: block;
+    color: var(--primary-inverse);
+    background-color: var(--primary);
+    border-radius: var(--border-radius);
+    padding: calc(var(--spacing) * 0.1) var(--spacing);
+    margin-bottom: calc(var(--spacing) * 0.5);
+    width: fit-content;
 }
 
 body > #menu #menu_btns div {

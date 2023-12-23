@@ -10,8 +10,9 @@
 
 {% block main %}
 <section id="menu" class="container">
-    <h2>Welcome, {{username}}!</h2>
-    <small>"{{ quote }}"</small>
+    <small id="user_type">FlamesPOS {{ user_type }}</small>
+    <h2>Welcome, {{fullname}}!</h2>
+    <small id="quote">"{{ quote }}"</small>
     <section id="menu_btns" class="grid">
         <div id="billing_btn">
             <img alt="Billing icon" src="{{ url_for('static', filename='icons/billing.svg') }}" height="100">

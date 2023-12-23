@@ -134,7 +134,6 @@ def login_required(f):
 def get_random_quote():
     quotes = [
         "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
-        "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. - Steve Jobs",
         "Don't be afraid to give up the good to go for the great. - John D. Rockefeller",
         "Success usually comes to those who are too busy to be looking for it. - Henry David Thoreau",
         "The only place where success comes before work is in the dictionary. - Vidal Sassoon",
@@ -147,10 +146,7 @@ def get_random_quote():
         "Your time is limited, don't waste it living someone else's life. - Steve Jobs",
         "The only way to do great work is to love what you do. - Steve Jobs",
         "Success is stumbling from failure to failure with no loss of enthusiasm. - Winston S. Churchill",
-        "The difference between a successful person and others is not a lack of strength, not a lack of knowledge, but rather a lack in will. - Vince Lombardi",
         "It's not about ideas. It's about making ideas happen. - Scott Belsky",
-        "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. - Steve Jobs",
-        "The only thing standing between you and your goal is the story you keep telling yourself as to why you can't achieve it. - Jordan Belfort",
         "Success is not in what you have, but who you are. - Bo Bennett",
         "If you are not willing to risk the usual, you will have to settle for the ordinary. - Jim Rohn",
     ]

@@ -114,7 +114,7 @@ class Staff(db.Model):
 class Payment(db.Model):
     # attributes
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    amount: Mapped[float] = mapped_column(Numeric, nullable=False)
+    subtotal: Mapped[float] = mapped_column(Numeric, nullable=False)
     ptype: Mapped[enums.PaymentType] = mapped_column(
         Enum(enums.PaymentType),
         nullable=False,

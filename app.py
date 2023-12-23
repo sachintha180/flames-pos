@@ -40,12 +40,17 @@ def initialize():
         if response.status_code != 200:
             return response
 
-        # return the owner's default credentials
+        # return HTML with owner's default credentials
         return generate_response(
             status_code=200,
             message="Login successful",
             action=f"You are now authenticated as '{request.json['username']}'",
-            data={"owner_default": app.config.get("OWNER_DEFAULT"), "flag": True},
+            data={
+                "html": render_template(
+                    "manage.html", owner_default=app.config.get("OWNER_DEFAULT")
+                ),
+                "flag": True,
+            },
         )
 
 
@@ -160,6 +165,9 @@ def login():
             return redirect("/menu")
         return render_template("login.html", version=app.config.get("VERSION"))
     else:
+        # clear session
+        session.clear()
+
         # validate the presence of username and password attributes in payload
         response = validate_attributes(request.json, ["username", "password"])
         if response.status_code != 200:
@@ -178,7 +186,11 @@ def login():
                 data={"flag": False},
             )
 
+        # save user details in session cookie
         session["username"] = request.json["username"]
+        session["password"] = request.json["password"]
+        session["user_type"] = user.role.value
+        session["fullname"] = user.fullname
 
         # verify password against saved password
         if not check_password_hash(user.password, request.json["password"]):
@@ -205,9 +217,17 @@ def menu():
         return render_template(
             "menu.html",
             version=app.config.get("VERSION"),
-            username=session["username"],
+            fullname=session["fullname"].split(" ")[-1],
             quote=get_random_quote(),
+            user_type=session["user_type"].title(),
         )
+
+
+@app.route("/billing", methods=["GET", "POST"])
+@login_required
+def billing():
+    if request.method == "GET":
+        return render_template("billing.html", version=app.config.get("VERSION"))
 
 
 if __name__ == "__main__":

@@ -69,7 +69,7 @@ function handleAuth() {
         }).then((response) => {
             showError(response.message, response.action, response.data.flag);
             if (response.data.flag) {
-                showMgmForm(response.data.owner_default);
+                document.querySelector("#manage").innerHTML = response.data.html;
                 document
                     .querySelector("#add_owner")
                     .addEventListener("click", handleOwner);
@@ -89,27 +89,6 @@ function handleAuth() {
     }
 
     setBtnBusy(submitBtn, false);
-}
-
-function showMgmForm(owner_default) {
-    const mgmContainer = document.querySelector("#manage");
-    mgmContainer.innerHTML = `
-        <h2>Manage FlamesPOS</h2>
-        <form id="confirm_form">
-            <label for="username">Username</label>  
-            <input type="text" id="username" name="username" value="${owner_default.username}" required />
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" value='${owner_default.password}' required />
-            <label for="password">Full Name</label>
-            <input type="text" id="fullname" name="fullname" value='${owner_default.fullname}'required />
-            <label for="password">Mobile No</label>
-            <input type="text" id="mobile_no" name="mobile_no" value='${owner_default.mobile_no}' required />
-            <section id="form_btns" class="grid">
-                <button type="button" id="add_owner" name="add_owner">Add New Owner</button>
-                <button type="button" id="reset_db" name="reset_db">Reset Database</button>
-            </section>
-        </form>
-    `;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
