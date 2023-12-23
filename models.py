@@ -124,6 +124,11 @@ class Payment(db.Model):
     balance: Mapped[float] = mapped_column(Numeric, nullable=False)
     paid_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
     discount: Mapped[float] = mapped_column(Numeric, nullable=True)
+    service_charge: Mapped[float] = mapped_column(Numeric, nullable=True)
+    value_added_tax: Mapped[float] = mapped_column(Numeric, nullable=True)
+    social_contrib_levy: Mapped[float] = mapped_column(Numeric, nullable=True)
+    delivery_charge: Mapped[float] = mapped_column(Numeric, nullable=True)
+    total: Mapped[float] = mapped_column(Numeric, nullable=False)
 
     # foreign key constraint for payment-order (1:1) - ON DELETE NO CHANGE
     order: Mapped["Order"] = relationship(back_populates="payment")
