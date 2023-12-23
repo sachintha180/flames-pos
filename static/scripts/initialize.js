@@ -1,41 +1,3 @@
-async function postJSON(routeURL, jsonObject) {
-    try {
-        const response = await fetch(routeURL, {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify(jsonObject),
-        });
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        return error;
-    }
-}
-
-function showError(errorMessage, errorAction) {
-    const errorTitle = document.querySelector("#error_title");
-    const errorLbl = document.querySelector("#error_lbl");
-    const errorModal = document.querySelector("#error");
-
-    errorTitle.innerHTML = errorMessage;
-    errorLbl.innerHTML = errorAction;
-
-    errorModal.setAttribute("open", true);
-}
-
-function hideError() {
-    const errorTitle = document.querySelector("#error_title");
-    const errorLbl = document.querySelector("#error_lbl");
-    const errorModal = document.querySelector("#error");
-
-    errorTitle.innerHTML = "";
-    errorLbl.innerHTML = "";
-
-    errorModal.removeAttribute("open");
-}
-
 function handleOwner() {
     hideError();
     const username = document.querySelector("#username").value;
@@ -118,7 +80,7 @@ function handleAuth() {
 function showMgmForm(owner_default) {
     const mgmContainer = document.querySelector("#manage");
     mgmContainer.innerHTML = `
-        <h3>Manage FlamesPOS</h3>
+        <h2>Manage FlamesPOS</h2>
         <form id="confirm_form">
             <label for="username">Username</label>  
             <input type="text" id="username" name="username" value="${owner_default.username}" required />

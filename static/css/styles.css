@@ -4,40 +4,28 @@
 :root:not([data-theme="dark"]) {
     --primary: #f4511e;
     --primary-transparent: #f4511ecc;
-    --primary-hover: #ff5722;
-    --primary-focus: rgba(244, 81, 30, 0.125);
+    --primary-hover: #f00e0e;
+    --primary-focus: rgba(244, 81, 30, 0.25);
     --primary-inverse: #fff;
-    --secondary: #56423c;
-    --secondary-hover: #493932;
-    --secondary-focus: rgba(86, 66, 60, 0.125);
+    --secondary: #aa0000;
+    --secondary-hover: #800000;
+    --secondary-focus: rgba(170, 0, 0, 0.125);
     --tertiary: #333;
     --tertiary-transparent: #333333cc;
-}
-
-/* Deep-orange Dark scheme (Auto) */
-/* Automatically enabled if user has Dark mode enabled */
-@media only screen and (prefers-color-scheme: dark) {
-    :root:not([data-theme]) {
-        --primary: #f4511e;
-        --primary-hover: #ff5722;
-        --primary-focus: rgba(244, 81, 30, 0.25);
-        --primary-inverse: #fff;
-        --secondary: #56423c;
-        --secondary-hover: #493932;
-        --secondary-focus: rgba(86, 66, 60, 0.125);
-    }
 }
 
 /* Deep-orange Dark scheme (Forced) */
 /* Enabled if forced with data-theme="dark" */
 [data-theme="dark"] {
     --primary: #f4511e;
-    --primary-hover: #ff5722;
+    --primary-hover: #f00e0e;
     --primary-focus: rgba(244, 81, 30, 0.25);
     --primary-inverse: #fff;
-    --secondary: #56423c;
-    --secondary-hover: #493932;
-    --secondary-focus: rgba(86, 66, 60, 0.125);
+    --secondary: #aa0000;
+    --secondary-hover: #800000;
+    --secondary-focus: rgba(170, 0, 0, 0.125);
+    --tertiary: #333;
+    --tertiary-transparent: #333333cc;
 }
 
 /* Deep-orange (Common styles) */
@@ -47,10 +35,17 @@
     --switch-color: var(--primary-inverse);
     --switch-checked-background-color: var(--primary);
     --header-height: 10vh;
+    --header-width: 100vw;
+    --menu-btn-min-width: 150px;
+}
+@media (max-width: 992px) {
+    body > #menu #menu_btns div {
+        margin-bottom: var(--spacing);
+    }
 }
 
 html > body {
-    padding: 1rem;
+    padding: var(--spacing);
 }
 
 body > header {
@@ -58,13 +53,13 @@ body > header {
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
-    padding: 0.2rem 1rem;
+    padding: var(--spacing);
     height: var(--header-height);
-    width: 100vw;
-    margin: -1rem;
+    width: var(--header-width);
+    margin: calc(var(--spacing) * -1);
     margin-bottom: var(--block-spacing-vertical);
     background-color: var(--primary-transparent);
-    box-shadow: 0 0 20px 5px var(--tertiary-transparent);
+    box-shadow: var(--card-box-shadow);
 }
 
 body > header video {
@@ -72,7 +67,7 @@ body > header video {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: var(--header-width);
     height: inherit;
     object-fit: cover;
 }
@@ -88,13 +83,19 @@ body > header h1 a {
 
 body > header img {
     background-color: var(--primary-inverse);
-    margin: -1rem;
+    margin: calc(var(--spacing) * -1);
     width: var(--header-height);
     height: var(--header-height);
 }
 
 body > section {
-    margin-bottom: 0;
+    padding: 0;
+    padding-bottom: calc(var(--spacing) * 3);
+}
+
+body > section > h2 {
+    padding-bottom: var(--spacing);
+    border-bottom: var(--outline-width) solid var(--primary);
 }
 
 body > footer {
@@ -103,26 +104,34 @@ body > footer {
     position: fixed;
     bottom: 0;
     left: 0;
-    padding: 1rem;
+    padding: var(--spacing);
 }
 
-body > footer p {
+body > footer small {
     color: var(--primary-inverse);
-    font-size: 0.8rem;
     margin: 0;
 }
 
 body > dialog > article {
-    min-width: 50vw;
+    min-width: calc(var(--header-width) / 2);
+    --block-spacing-vertical: calc(var(--spacing) * 2);
+}
+
+body > dialog > article > h4 {
+    margin: calc(var(--block-spacing-vertical) * -1)
+        calc(var(--block-spacing-horizontal) * -1) var(--block-spacing-vertical)
+        calc(var(--block-spacing-horizontal) * -1);
+    background-color: var(--primary);
+    padding: calc(var(--spacing) / 3) var(--spacing);
+    color: var(--primary-inverse);
+}
+
+body > dialog > article > h3 {
+    margin-bottom: var(--spacing);
 }
 
 body > #spacer {
     min-height: var(--block-spacing-vertical);
-}
-
-body > #menu h2 {
-    padding-bottom: 0.5rem;
-    border-bottom: 5px solid var(--primary);
 }
 
 body > #menu #menu_btns div {
@@ -131,12 +140,11 @@ body > #menu #menu_btns div {
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
-    margin: 0.5rem;
-    gap: 1rem;
+    padding: var(--spacing);
+    gap: var(--spacing);
     border-radius: var(--border-radius);
-    min-width: 150px;
-    transition: background-color 0.1s ease-in-out;
+    min-width: var(--menu-btn-min-width);
+    transition: background-color var(--transition);
 }
 
 body > #menu #menu_btns div:nth-child(2n) {
@@ -155,11 +163,9 @@ body > #menu #menu_btns div:nth-child(2n):hover {
 body > #menu #menu_btns div p {
     margin: 0;
     color: var(--primary-inverse);
-    font-size: 1.2rem;
 }
 
 body > #menu #menu_btns div img {
     width: calc(var(--header-height) / 2);
     height: calc(var(--header-height) / 2);
-    fill: var(--primary-inverse);
 }
