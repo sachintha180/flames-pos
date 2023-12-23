@@ -14,7 +14,12 @@ async function postJSON(routeURL, jsonObject) {
     }
 }
 
-function showError(errorMessage, errorAction, errorType="FlamesPOS Error") {
+function showError(errorMessage, errorAction, error=true) {
+    const errorType = "FlamesPOS: Success";
+    if (error) {
+        errorType = "FlamesPOS: Error";
+    }
+
     const errorTitle = document.querySelector("#error_title");
     const errorSubtitle = document.querySelector("#error_type");
     const errorLbl = document.querySelector("#error_lbl");
@@ -32,7 +37,7 @@ function hideError() {
     const errorTitle = document.querySelector("#error_title");
     const errorSubtitle = document.querySelector("#error_type");
     const errorLbl = document.querySelector("#error_lbl");
-    
+
     const errorModal = document.querySelector("#error");
 
     errorTitle.innerHTML = "";

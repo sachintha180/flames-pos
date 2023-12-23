@@ -12,7 +12,7 @@ function handleOwner() {
             fullname: fullname,
             mobile_no: mobile_no,
         }).then((response) => {
-            showError(response.message, response.action);
+            showError(response.message, response.action, response.data.flag);
         });
     } else {
         if (!username) {
@@ -39,7 +39,7 @@ function resetDB(username, password) {
             username: username,
             password: password,
         }).then((response) => {
-            showError(response.message, response.action);
+            showError(response.message, response.action, response.data.flag);
         });
     }
 }
@@ -55,7 +55,7 @@ function handleAuth() {
             username: username,
             password: password,
         }).then((response) => {
-            showError(response.message, response.action);
+            showError(response.message, response.action, response.data.flag);
             if (response.data.flag) {
                 showMgmForm(response.data.owner_default);
                 document

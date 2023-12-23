@@ -8,7 +8,7 @@ function handleAuth() {
             username: username,
             password: password,
         }).then((response) => {
-            showError(response.message, response.action);
+            showError(response.message, response.action, response.data.flag);
             if (response.data.flag) {
                 window.location.href = "/menu";
             }
