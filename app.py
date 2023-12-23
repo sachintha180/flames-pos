@@ -25,7 +25,7 @@ def initialize():
         response = validate_attributes(
             request.json,
             ["username", "password"],
-            app.config.get("SUPERADMIN"),
+            app.config.get("SUPERADMIN_DEFAULT"),
         )
         if response.status_code != 200:
             return response
