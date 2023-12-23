@@ -1,3 +1,9 @@
+@font-face {
+    font-family: "San Francisco UI";
+    src: url("../fonts/San\ Francisco/SFUIText-Regular.otf");
+    font-weight: 400;
+}
+
 /* Deep-orange Light scheme (Default) */
 /* Can be forced with data-theme="light" */
 [data-theme="light"],
@@ -39,6 +45,7 @@
     --menu-btn-min-width: 150px;
     --success: #4caf50;
     --error: #f44336;
+    --font-family: "San Francisco UI", sans-serif;
 }
 
 @media (max-width: 992px) {
@@ -92,8 +99,9 @@ body > header img {
 }
 
 body > section {
-    padding: 0;
-    padding-bottom: calc(var(--spacing) * 3);
+    width: var(--header-width);
+    margin: 0 calc(var(--spacing) * -1);
+    padding-bottom: calc(var(--spacing) * 2);
 }
 
 body > section > h2 {
@@ -133,10 +141,6 @@ body > dialog > article > h3 {
     margin-bottom: var(--spacing);
 }
 
-body > #spacer {
-    min-height: var(--block-spacing-vertical);
-}
-
 body > #menu #menu_btns div {
     background-color: var(--primary);
     display: flex;
@@ -164,6 +168,7 @@ body > #menu #menu_btns div:nth-child(2n):hover {
 }
 
 body > #menu #menu_btns div p {
+    text-transform: uppercase;
     margin: 0;
     color: var(--primary-inverse);
 }
