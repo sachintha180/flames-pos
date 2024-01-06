@@ -1,5 +1,6 @@
+from tkinter import E
 from flask import Flask, render_template, request, session, redirect
-from models import db, User
+from models import Customer, Product, Staff, db, User
 from helpers import (
     generate_response,
     get_random_quote,
@@ -7,7 +8,9 @@ from helpers import (
     login_required,
 )
 from flask_bcrypt import generate_password_hash, check_password_hash
-import enums
+import enums, random
+from data import product_names, product_descriptions
+from faker import Faker
 
 app = Flask(__name__)
 app.config.from_object("config.ProductionConfig")
@@ -136,10 +139,11 @@ def resetDB():
         if response.status_code != 200:
             return response
 
-        # delete and re-initialize schema
+        # delete and re-initialize schema + clear schema
         try:
             db.drop_all()
             db.create_all()
+            session.clear()
         except Exception as e:
             error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
             return generate_response(
@@ -154,6 +158,112 @@ def resetDB():
             status_code=200,
             message="Successfully reset database",
             action=f"You have now reset the database",
+            data={"flag": True},
+        )
+
+
+# note: /fill_rnd route is NOT PUBLICLY visible
+@app.route("/fill_rnd", methods=["POST"])
+def fillRnd():
+    if request.method == "POST":
+        # verify the provided credentials against the superadmin's credentials
+        response = validate_attributes(
+            request.json,
+            ["username", "password"],
+            app.config.get("SUPERADMIN"),
+        )
+        if response.status_code != 200:
+            return response
+
+        # initialize maximum random records
+        MAX_RECORDS = 10
+
+        # populate the database with fake customer records (assuming database was already cleared)
+        try:
+            fake = Faker()
+            for _ in range(MAX_RECORDS):
+                customer = Customer(
+                    fullname=fake.name(),
+                    mobile_no=f"07{fake.msisdn()[3:11]}",
+                    address=fake.address(),
+                    city=fake.city(),
+                    email=fake.ascii_free_email(),
+                )
+                db.session.add(customer)
+            del fake
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to fill database with customer records",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # populate staff records
+        try:
+            fake = Faker()
+            staffRoles = [e.value for e in enums.StaffRole]
+            for _ in range(MAX_RECORDS):
+                member = Staff(
+                    fullname=fake.name(),
+                    role=random.choice(staffRoles),
+                    mobile_no=f"07{fake.msisdn()[3:11]}",
+                    email=fake.ascii_free_email(),
+                )
+                db.session.add(member)
+            del fake
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to fill database with staff records",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # populate product records
+        try:
+            fake = Faker()
+            product_categories = list(product_names.keys())
+            for category in product_categories:
+                for product_name, product_description in zip(
+                    product_names[category], product_descriptions[category]
+                ):
+                    product = Product(
+                        name=product_name,
+                        description=product_description,
+                        price=random.randrange(500, 2500, 10),
+                        category=category,
+                    )
+                    db.session.add(product)
+            del fake
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to fill database with products",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # commit changes to database
+        try:
+            db.session.commit()
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to commit changes to database",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # otherwise, return success JSON
+        return generate_response(
+            status_code=200,
+            message="Successfully filled database",
+            action="You have now populated the database with generic customers, staff and products",
             data={"flag": True},
         )
 
@@ -231,4 +341,4 @@ def billing():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
