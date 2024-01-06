@@ -41,3 +41,11 @@ class OrderStatus(enum.Enum):
     returned = "returned"
     refunded = "refunded"
     awaiting_pickup = "awaiting_pickup"
+
+
+class Categories(enum.Enum):
+    pizza = "pizza"
+    pasta = "pasta"
+    toppings = "toppings"
+    salads = "salads"
+    appetizers = "appetizers"
