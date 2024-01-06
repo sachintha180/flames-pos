@@ -11,38 +11,59 @@
 {% block main %}
 <section id="billing" class="container">
     <section id="bill" class="container">
-        <h2>Bill</h2>
         <section id="items" class="container">
-            <div class="item" class="container">
-                <p class="id">item.id</p>
-                <p class="name">item.name</p>
-                <p class="price">item.price</p>
-                <p class="quantity">item.quantity</p>
-                <button type="button" id="remove" name="remove">Remove</button>
+            <div id="item-header" class="item container">
+                <p class="id">ID</p>
+                <p class="name">Name</p>
+                <p class="price">Price</p>
+                <p class="quantity">Quantity</p>
+                <button type="button" class="remove" name="remove">-</button>
             </div>
+            <section id="item-rows">
+            </section>
         </section>
         <section id="total" class="container">
-            <p class="subtotal">subtotal</p>
-            <p class="discount">discount</p>
-            <p class="service_charge">service</p>
-            <p class="value_added_tax">value_added_tax</p>
-            <p class="delivery_charge">delivery_charge</p>
-            <p class="total">total</p>
-            <p class="paid">paid</p>
-            <p class="balance">balance</p>
+            <div class="total-row item highlight">
+                <p class="item-label">Subtotal</p>
+                <p id="subtotal">subtotal</p>
+            </div>
+            <div class="total-row item">
+                <p class="item-label">Discount</p>
+                <p id="discount">discount</p>
+            </div>
+            <div class="total-row item">
+                <p class="item-label">Service Charge (2%)</p>
+                <p id="service_charge">service_charge</p>
+            </div>
+            <div class="total-row item">
+                <p class="item-label">VAT (18%)</p>
+                <p id="value_added_tax">value_added_tax</p>
+            </div>
+            <div class="total-row item">
+                <p class="item-label">Delivery Charge</p>
+                <p id="delivery_charge">delivery_charge</p>
+            </div>
+            <div class="total-row item highlight">
+                <p class="item-label">Total</p>
+                <p id="total">total</p>
+            </div>
+            <div class="total-row item">
+                <p class="item-label">Paid</p>
+                <p id="paid">paid</p>
+            </div>
+            <div class="total-row item">
+                <p class="item-label">Balance</p>
+                <p id="balance">balance</p>
+            </div>
         </section>
     </section>
     <section id="products" class="container">
-        <h2>Products</h2>
-        <div class="product" class="container">
-            <p class="id">product.id</p>
-            <p class="name">product.name</p>
-            <p class="description">product.description</p>
-            <p class="price">product.price</p>
-            <img alt="Triangle icon" src="{{ url_for('static', filename='icons/triangle.svg') }}" height="100">
+        <div id="product-header" class="item container">
         </div>
+        <section id="product-items">
+        </section>
     </section>
-    <section id="control" class="container">
+    <!-- <section id="control" class="container">
         <div id="table_order_btn">
             <img alt="Table order icon" src="{{ url_for('static', filename='icons/table.svg') }}" height="100">
             <p>Table Order</p>
@@ -59,6 +80,6 @@
             <img alt="Save icon" src="{{ url_for('static', filename='icons/save.svg') }}" height="100">
             <p>Save Order</p>
         </div>
-    </section>
+    </section> -->
 </section>
 {% endblock %}
