@@ -26,7 +26,6 @@
   --tertiary-transparent: #333333cc;
   --row-even: #fddfd688;
   --row-odd: #ffc6b588;
-  
 }
 /* Deep-orange Dark scheme (Forced) */
 /* Enabled if forced with data-theme="dark" */
@@ -57,12 +56,12 @@
   --error-hover: #e53935;
   --error-focus: rgba(244, 67, 54, 0.25);
   --font-family: 'San Francisco UI', sans-serif;
-  --category-1: #F4511E;
-  --category-2: #E53362;
-  --category-3: #B4418A;
+  --category-1: #f4511e;
+  --category-2: #e53362;
+  --category-3: #b4418a;
   --category-4: #725193;
-  --category-5: #3C527D;
-  --category-6: #2F4858;
+  --category-5: #3c527d;
+  --category-6: #2f4858;
 }
 @media (max-width: 992px) {
   body > #menu #menu_btns div {
@@ -247,10 +246,17 @@ body > #billing #bill #items {
   height: 23vh;
 }
 body > #billing #bill #items #item-rows {
-  display: inherit;
   height: 23vh;
   overflow: auto auto;
   margin-bottom: 0;
+  background-color: var(--row-even);
+  display: flex;
+  flex-flow: column nowrap;
+}
+body > #billing #bill #items #item-rows .temp-msg {
+  color: var(--tertiary-transparent);
+  font-size: 1.5rem;
+  margin: 0;
 }
 body > #billing #bill .item {
   display: -webkit-box;
@@ -337,6 +343,9 @@ body > #billing #products {
   box-shadow: var(--card-box-shadow);
   padding: var(--spacing) calc(var(--spacing) * 2);
   flex: 1.5;
+  justify-content: space-between;
+  display: flex;
+  flex-flow: column nowrap;
 }
 body > #billing #products #product-header {
   display: -webkit-box;
@@ -385,7 +394,6 @@ body > #billing #products #product-items {
   gap: var(--spacing);
   margin: calc(var(--spacing) * 2) 0;
   overflow-y: auto;
-  height: 60%;
   padding-bottom: var(--spacing);
   align-items: flex-start;
 }
@@ -423,6 +431,9 @@ body > #billing #products #product-items .product p {
 body > #billing #products #product-items .product .id {
   font-size: 0.7rem;
 }
+body > #billing #products #product-items .product .name {
+  font-size: 0.8rem;
+}
 body > #billing #products #product-items .product .price {
   font-size: 1.1rem;
 }
@@ -434,8 +445,8 @@ body > #billing #products #product-items .product img {
 body > #billing #products #product-buttons {
   display: flex;
   gap: var(--spacing);
-  border-top: var(--outline-width) solid var(--secondary);
-  padding-top: var(--spacing);
+  padding: var(--spacing);
+  box-shadow: var(--card-box-shadow);
 }
 body > #billing #products #product-buttons div {
   display: flex;
