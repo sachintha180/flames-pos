@@ -11,7 +11,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SESSION_PERMANENT = True
-    PERMANENT_SESSION_LIFETIME = timedelta(minutes=5)
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAX_ERROR_LENGTH = 500
     SUPERADMIN_DEFAULT = {

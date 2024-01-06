@@ -202,7 +202,7 @@ class Product(db.Model):
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=True)
     price: Mapped[float] = mapped_column(Numeric, nullable=False)
-    category: Mapped[str] = mapped_column(String, nullable=False)
+    category: Mapped[str] = mapped_column(Enum(enums.Categories), nullable=False)
 
     # foreign key constraint for order-product (1:M) - ON DELETE NO CHANGE
     order: Mapped[List["Order"]] = relationship(
