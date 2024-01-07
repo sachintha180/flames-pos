@@ -57,11 +57,17 @@
   --error-focus: rgba(244, 67, 54, 0.25);
   --font-family: 'San Francisco UI', sans-serif;
   --category-1: #f4511e;
+  --category-1-hover: #f00e0e;
   --category-2: #e53362;
+  --category-2-hover: #c71f4c;
   --category-3: #b4418a;
+  --category-3-hover: #91015c;
   --category-4: #725193;
+  --category-4-hover: #4d1c7e;
   --category-5: #3c527d;
+  --category-5-hover: #122d64;
   --category-6: #2f4858;
+  --category-6-hover: #16374d;
 }
 @media (max-width: 992px) {
   body > #menu #menu_btns div {
@@ -364,10 +370,10 @@ body > #billing #products #product-header .category {
   -ms-flex-positive: 1;
   flex-grow: 1;
   text-align: center;
-  color: var(--primary);
   -webkit-transition: all var(--transition);
   -o-transition: all var(--transition);
   transition: all var(--transition);
+  color: var(--primary);
   margin: 0;
 }
 body > #billing #products #product-header .category:hover {
@@ -376,6 +382,51 @@ body > #billing #products #product-header .category:hover {
   box-shadow: inset 200px 0 0 0 var(--primary);
   border-color: var(--primary-inverse);
   cursor: pointer;
+}
+body > #billing #products #product-header .category.category-1 {
+  color: var(--category-1);
+  border-color: var(--category-1);
+}
+body > #billing #products #product-header .category.category-1:hover {
+  box-shadow: inset 200px 0 0 0 var(--category-1);
+  color: var(--primary-inverse);
+  border-color: var(--primary-inverse);
+}
+body > #billing #products #product-header .category.category-2 {
+  color: var(--category-2);
+  border-color: var(--category-2);
+}
+body > #billing #products #product-header .category.category-2:hover {
+  box-shadow: inset 200px 0 0 0 var(--category-2);
+  color: var(--primary-inverse);
+  border-color: var(--primary-inverse);
+}
+body > #billing #products #product-header .category.category-3 {
+  color: var(--category-3);
+  border-color: var(--category-3);
+}
+body > #billing #products #product-header .category.category-3:hover {
+  box-shadow: inset 200px 0 0 0 var(--category-3);
+  color: var(--primary-inverse);
+  border-color: var(--primary-inverse);
+}
+body > #billing #products #product-header .category.category-4 {
+  color: var(--category-4);
+  border-color: var(--category-4);
+}
+body > #billing #products #product-header .category.category-4:hover {
+  box-shadow: inset 200px 0 0 0 var(--category-4);
+  color: var(--primary-inverse);
+  border-color: var(--primary-inverse);
+}
+body > #billing #products #product-header .category.category-5 {
+  color: var(--category-5);
+  border-color: var(--category-5);
+}
+body > #billing #products #product-header .category.category-5:hover {
+  box-shadow: inset 200px 0 0 0 var(--category-5);
+  color: var(--primary-inverse);
+  border-color: var(--primary-inverse);
 }
 body > #billing #products #product-items {
   display: -webkit-box;
@@ -399,7 +450,7 @@ body > #billing #products #product-items {
 }
 body > #billing #products #product-items .product {
   background-color: var(--primary);
-  height: calc(var(--header-height) * 1.8);
+  height: calc(var(--header-height) * 2.3);
   width: calc(var(--header-height) * 1.8);
   display: -webkit-box;
   display: -ms-flexbox;
@@ -413,26 +464,53 @@ body > #billing #products #product-items .product {
   align-items: center;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
-  justify-content: center;
   border-radius: var(--border-radius);
   -webkit-transition: background-color var(--transition);
   -o-transition: background-color var(--transition);
   transition: background-color var(--transition);
+  padding: calc(var(--spacing) * 0.5);
 }
 body > #billing #products #product-items .product:hover {
   cursor: pointer;
-  background-color: var(--primary-hover);
+}
+body > #billing #products #product-items .product.category-1 {
+  background-color: var(--category-1);
+}
+body > #billing #products #product-items .product.category-1:hover {
+  background-color: var(--category-1-hover);
+}
+body > #billing #products #product-items .product.category-2 {
+  background-color: var(--category-2);
+}
+body > #billing #products #product-items .product.category-2:hover {
+  background-color: var(--category-2-hover);
+}
+body > #billing #products #product-items .product.category-3 {
+  background-color: var(--category-3);
+}
+body > #billing #products #product-items .product.category-3:hover {
+  background-color: var(--category-3-hover);
+}
+body > #billing #products #product-items .product.category-4 {
+  background-color: var(--category-4);
+}
+body > #billing #products #product-items .product.category-4:hover {
+  background-color: var(--category-4-hover);
+}
+body > #billing #products #product-items .product.category-5 {
+  background-color: var(--category-5);
+}
+body > #billing #products #product-items .product.category-5:hover {
+  background-color: var(--category-5-hover);
 }
 body > #billing #products #product-items .product p {
   text-align: center;
   margin: 0.2rem 0;
   color: var(--primary-inverse);
 }
-body > #billing #products #product-items .product .id {
-  font-size: 0.7rem;
-}
 body > #billing #products #product-items .product .name {
   font-size: 0.8rem;
+  flex-grow: 1;
 }
 body > #billing #products #product-items .product .price {
   font-size: 1.1rem;
@@ -457,6 +535,7 @@ body > #billing #products #product-buttons div {
   padding: calc(var(--spacing) * 0.5);
   flex: 1;
   border-radius: var(--border-radius);
+  transition: background-color var(--transition);
 }
 body > #billing #products #product-buttons div:hover {
   background-color: var(--secondary-hover);
