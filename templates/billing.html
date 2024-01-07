@@ -10,14 +10,15 @@
 
 {% block main %}
 <section id="billing" class="container">
-    <section id="bill" class="container">
+    <section id="bill">
         <section id="items" class="container">
             <div id="item-header" class="item container">
                 <p class="id">ID</p>
                 <p class="name">Name</p>
                 <p class="price">Price</p>
                 <p class="quantity">Quantity</p>
-                <button type="button" class="remove" name="remove">-</button>
+                <button type="button" class="quantity-btn" name="remove">-</button>
+                <button type="button" class="quantity-btn" name="add">-</button>
             </div>
             <section id="item-rows">
             </section>
@@ -32,7 +33,7 @@
                 <p id="discount">discount</p>
             </div>
             <div class="total-row item">
-                <p class="item-label">Service Charge (2%)</p>
+                <p class="item-label">Service Charge (5%)</p>
                 <p id="service_charge">service_charge</p>
             </div>
             <div class="total-row item">
@@ -57,29 +58,41 @@
             </div>
         </section>
     </section>
-    <section id="products" class="container">
+    <section id="products">
         <div id="product-header" class="item container">
+            {% for category in categories %}
+            <p class="category category-{{ loop.index - 1 }}">{{ category }}</p>
+            {% endfor %}
         </div>
         <section id="product-items">
+            {% for product in products %}
+            <div class="product category-{{ product.category_id }}">
+                <p class="id">#{{ product.id }}</p>
+                <p class="name">{{ product.name }}</p>
+                <img alt="{{ product.description }}" src="{{ url_for('static', filename='icons/triangle.svg') }}"
+                    height="100">
+                <p class="price">Rs. {{ product.price }}</p>
+            </div>
+            {% endfor %}
         </section>
+        <div id="product-buttons" class="item container">
+            <div id="table_order_btn">
+                <img alt="Table order icon" src="{{ url_for('static', filename='icons/table.svg') }}" height="100">
+                <p>Table Order</p>
+            </div>
+            <div id="take_away_btn">
+                <img alt="Take away icon" src="{{ url_for('static', filename='icons/logout.svg') }}" height="100">
+                <p>Take Away</p>
+            </div>
+            <div id="delivery_btn">
+                <img alt="Delivery icon" src="{{ url_for('static', filename='icons/delivery.svg') }}" height="100">
+                <p>Delivery</p>
+            </div>
+            <div id="save_btn">
+                <img alt="Save icon" src="{{ url_for('static', filename='icons/save.svg') }}" height="100">
+                <p>Save Order</p>
+            </div>
+        </div>
     </section>
-    <!-- <section id="control" class="container">
-        <div id="table_order_btn">
-            <img alt="Table order icon" src="{{ url_for('static', filename='icons/table.svg') }}" height="100">
-            <p>Table Order</p>
-        </div>
-        <div id="take_away_btn">
-            <img alt="Take away icon" src="{{ url_for('static', filename='icons/logout.svg') }}" height="100">
-            <p>Take Away</p>
-        </div>
-        <div id="delivery_btn">
-            <img alt="Delivery icon" src="{{ url_for('static', filename='icons/delivery.svg') }}" height="100">
-            <p>Delivery</p>
-        </div>
-        <div id="save_btn">
-            <img alt="Save icon" src="{{ url_for('static', filename='icons/save.svg') }}" height="100">
-            <p>Save Order</p>
-        </div>
-    </section> -->
 </section>
 {% endblock %}
