@@ -1,6 +1,5 @@
-from tkinter import E
 from flask import Flask, render_template, request, session, redirect
-from models import Customer, Product, Staff, db, User
+from models import Customer, Order, OrderProduct, Payment, Product, Staff, db, User
 from helpers import (
     generate_response,
     get_random_quote,
@@ -70,16 +69,10 @@ def addOwner():
 
         # query username in database
         try:
-            matched_users = db.session.scalars(
-                db.select(User).where(
-                    db.and_(
-                        User.username == request.json["username"],
-                        User.role == enums.UserRole.owner,
-                    )
-                )
-            ).all()
+            query = db.session.select(User).where(User.username == request.json["username"]).where(User.role == enums.UserRole.owner)
+            matched_users = db.session.scalars(query).all()
+            print(matched_users)
         except Exception as e:
-            print(e)
             error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
             return generate_response(
                 status_code=400,
@@ -285,9 +278,9 @@ def login():
 
         # otherwise, get username from database + save to session variable
         try:
-            user = db.session.execute(
-                db.select(User).filter(User.username == request.json["username"])
-            ).scalar_one()
+            user = db.session.scalar(
+                db.select(User).where(User.username == request.json["username"])
+            )
         except:
             return generate_response(
                 status_code=404,
@@ -337,8 +330,189 @@ def menu():
 @login_required
 def billing():
     if request.method == "GET":
-        return render_template("billing.html", version=app.config.get("VERSION"))
+        # get product category names
+        try:
+            categories = db.session.scalars(
+                db.select(Product.category).distinct()
+            ).all()
+            category_list = ["All"] + [e.value.title() for e in categories]
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to get product categories",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # get full product details
+        try:
+            products = db.session.scalars(db.select(Product)).all()
+            products_list = []
+            for product in products:
+                products_list.append(
+                    {
+                        "id": product.id,
+                        "name": product.name,
+                        "description": product.description,
+                        "price": float(product.price),
+                        "category_id": category_list.index(
+                            product.category.value.title()
+                        ),
+                    }
+                )
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to get all product details",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+        
+        # get list of pending orders
+        try:
+            pending_orders = db.session.scalars(
+                db.select(Order.id).where(Order.status == enums.OrderStatus.pending)
+            ).all()
+        except:
+            return generate_response(
+                status_code=404,
+                message="Pending orders not found",
+                action="Please logout and login, and try again",
+                data={"flag": False},
+            )
+        
+
+        # if successful, get item and total lists for each pending order
+        try:
+            pass
+            # for order_id in pending_orders:
+            #     item_list = db.session.scalars(
+            #         db.select(Product, OrderProduct).join_from(Product, OrderProduct).options(where(Product.orders.any(OrderProduct.order_id == order_id))
+            #     ).all()
+            #     print(item_list)
+        except Exception as e:
+            print(e)
+            return generate_response(
+                status_code=404,
+                message="Could not create item list for pending orders",
+                action="Please logout and login, and try again",
+                data={"flag": False},
+            )
+        
+        return render_template(
+            "billing.html",
+            version=app.config.get("VERSION"),
+            categories=category_list,
+            products=products_list,
+        )
+
+
+# note: /save_order route is NOT PUBLICLY visible
+@app.route("/save_order", methods=["POST"])
+@login_required
+def saveOrder():
+    if request.method == "POST":
+        # verify the provided order data
+        response = validate_attributes(
+            request.json,
+            ["totals", "items"],
+        )
+        if response.status_code != 200:
+            return response
+
+        # get the initiating user's id
+        try:
+            user_id = db.session.scalar(
+                db.select(User.id).where(User.username == session["username"])
+            )
+        except:
+            return generate_response(
+                status_code=404,
+                message="Username is invalid",
+                action="This bill's creator is an invalid user, please logout and login again.",
+                data={"flag": False},
+            )
+
+        # if successful, insert payment data w/ ptype="pending"
+        # NOTE: paid and balance amounts will ONLY BE UPDATED upon confirming the payment
+        # TODO: social_contrib_levy field must be changed depending on customer's requirements
+        try:
+            payment = Payment(
+                subtotal=request.json["totals"]["subtotal"],
+                paid=0,
+                balance=0,
+                discount=request.json["totals"]["discount"],
+                service_charge=request.json["totals"]["service_charge"],
+                value_added_tax=request.json["totals"]["value_added_tax"],
+                social_contrib_levy=0,
+                delivery_charge=request.json["totals"]["delivery_charge"],
+                total=request.json["totals"]["total"],
+            )
+            db.session.add(payment)
+            db.session.commit()
+            payment_id = payment.id
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to add payment information",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # if successful, insert order data
+        # NOTE: all orders are of otype="unconfirmed" when saved
+        # NOTE: all orders are of status="pending" when saved
+        # TODO: all orders are currently made by customer_id=1, please change it before distribution
+        # TODO: all orders are currently assigned to staff_id=1, please change it before distribution
+        try:
+            order = Order(
+                customer_id=1, user_id=user_id, payment_id=payment_id, staff_id=1
+            )
+            db.session.add(order)
+            db.session.commit()
+            order_id = order.id
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to add order information",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # if successful, insert order-product data
+        try:
+            for item_id in request.json["items"]:
+                order_product = OrderProduct(
+                    order_id=order_id,
+                    product_id=item_id,
+                    quantity=request.json["items"][item_id]["quantity"],
+                )
+                db.session.add(order_product)
+            db.session.commit()
+        except Exception as e:
+            error = str(e)[: app.config.get("MAX_ERROR_LENGTH")] + " (more)"
+            return generate_response(
+                status_code=400,
+                message="Failed to register order & payment information",
+                action=f"Server responded with error: {error}",
+                data={"flag": False},
+            )
+
+        # otherwise, return success JSON
+        return generate_response(
+            status_code=200,
+            message="Successfully added order",
+            action=f"You have now added order #{order_id} - you should see it on the pending list",
+            data={
+                "flag": True,
+                "order_id": order_id
+            },
+        )
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=3000)

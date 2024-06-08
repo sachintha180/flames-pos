@@ -29,6 +29,12 @@ class PaymentType(enum.Enum):
     cash_on_delivery = "cash_on_delivery"
 
 
+class PaymentStatus(enum.Enum):
+    pending = "pending"
+    completed = "completed"
+    refunded = "refunded"
+
+
 class OrderStatus(enum.Enum):
     pending = "pending"
     confirmed = "confirmed"
@@ -43,7 +49,15 @@ class OrderStatus(enum.Enum):
     awaiting_pickup = "awaiting_pickup"
 
 
+class OrderType(enum.Enum):
+    table_order = "table_order"
+    take_away = "take_away"
+    delivery = "delivery"
+    unconfirmed = "unconfirmed"
+
+
 class Categories(enum.Enum):
+    all = "all"
     pizza = "pizza"
     pasta = "pasta"
     toppings = "toppings"

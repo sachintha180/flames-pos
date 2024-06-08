@@ -114,6 +114,9 @@ def verify_user(user_dict):
             )
 
 
+def print_order_bill(order, totals, items):
+    return
+
 def login_required(f):
     """
     Decorate routes to require login.

@@ -103,7 +103,7 @@ class Staff(db.Model):
     mobile_no: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     email: Mapped[str] = mapped_column(String, unique=True, nullable=True)
 
-    # foreign key constraint for staff-order (1:1) - ON DELETE NO CHANGE
+    # foreign key constraint for staff-order (1:M) - ON DELETE NO CHANGE
     order: Mapped["Order"] = relationship(back_populates="staff")
 
     # representation method
@@ -120,9 +120,14 @@ class Payment(db.Model):
         nullable=False,
         server_default=enums.PaymentType.cash.value,
     )
+    pstatus: Mapped[enums.PaymentType] = mapped_column(
+        Enum(enums.PaymentStatus),
+        nullable=False,
+        server_default=enums.PaymentStatus.pending.value,
+    )
     paid: Mapped[float] = mapped_column(Numeric, nullable=False)
     balance: Mapped[float] = mapped_column(Numeric, nullable=False)
-    paid_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
+    paid_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=True)
     discount: Mapped[float] = mapped_column(Numeric, nullable=True)
     service_charge: Mapped[float] = mapped_column(Numeric, nullable=True)
     value_added_tax: Mapped[float] = mapped_column(Numeric, nullable=True)
@@ -135,24 +140,44 @@ class Payment(db.Model):
 
     # representation method
     def __repr__(self):
-        return f"Payment(id={self.id}, amount={self.amount}, ptype={self.ptype})"
+        return f"Payment(id={self.id}, total={self.total}, ptype={self.ptype})"
 
 
-# SQLAlchemy.Core associative table for resolving order-product (M:M) relationship
-OrderProduct = Table(
+class OrderProduct(db.Model):
     # attributes
-    "order_product",
-    db.metadata,
-    Column("order_id", ForeignKey("order.id"), primary_key=True),
-    Column("product_id", ForeignKey("product.id"), primary_key=True),
-    Column("quantity", Integer, nullable=False),
-)
+    order_id: Mapped[int] = mapped_column(ForeignKey("order.id"), primary_key=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"), primary_key=True)
+    quantity: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    # foreign key constrinats for order-product relationship (M:M)
+    order: Mapped["Order"] = relationship(back_populates="products")
+    product: Mapped["Product"] = relationship(back_populates="orders")
+
+
+class Product(db.Model):
+    # attributes
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    description: Mapped[str] = mapped_column(String, nullable=True)
+    price: Mapped[float] = mapped_column(Numeric, nullable=False)
+    category: Mapped[str] = mapped_column(Enum(enums.Categories), nullable=False)
+
+    # foreign key constraint for order-product (1:M) - ON DELETE NO CHANGE
+    orders: Mapped[List["OrderProduct"]] = relationship(back_populates="product")
+
+    # representation method
+    def __repr__(self):
+        return f"Product(id={self.id}, name={self.name}, price={self.price})>"
 
 
 class Order(db.Model):
     # attributes
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    otype: Mapped[str] = mapped_column(String, nullable=False)
+    otype: Mapped[str] = mapped_column(
+        Enum(enums.OrderType),
+        nullable=False,
+        server_default=enums.OrderType.unconfirmed.value,
+    )
     description: Mapped[str] = mapped_column(String, nullable=True)
     status: Mapped[enums.OrderStatus] = mapped_column(
         Enum(enums.OrderStatus),
@@ -179,36 +204,16 @@ class Order(db.Model):
     payment_id: Mapped[int] = mapped_column(ForeignKey("payment.id"))
     payment: Mapped["Payment"] = relationship(back_populates="order")
 
-    # foreign key constraint for order-staff (1:1) - ON DELETE NO CHANGE
+    # foreign key constraint for order-staff (M:1) - ON DELETE NO CHANGE
     staff_id: Mapped[int] = mapped_column(ForeignKey("staff.id"))
     staff: Mapped["Staff"] = relationship(back_populates="order")
 
     # foreign key constraint for order-product (1:M) - ON DELETE NO CHANGE
-    product: Mapped[List["Product"]] = relationship(
-        secondary=OrderProduct, back_populates="order"
-    )
+    products: Mapped[List["OrderProduct"]] = relationship(back_populates="order")
 
     # setup unique constraints for 1:1 relationships
-    __table_args__ = (UniqueConstraint("payment_id"), UniqueConstraint("staff_id"))
+    __table_args__ = (UniqueConstraint("payment_id"),)
 
     # representation method
     def __repr__(self):
         return f"Order(id={self.id}, otype={self.otype}, status={self.status})>"
-
-
-class Product(db.Model):
-    # attributes
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(String, nullable=True)
-    price: Mapped[float] = mapped_column(Numeric, nullable=False)
-    category: Mapped[str] = mapped_column(Enum(enums.Categories), nullable=False)
-
-    # foreign key constraint for order-product (1:M) - ON DELETE NO CHANGE
-    order: Mapped[List["Order"]] = relationship(
-        secondary=OrderProduct, back_populates="product"
-    )
-
-    # representation method
-    def __repr__(self):
-        return f"Product(id={self.id}, name={self.name}, price={self.price})>"

@@ -54,6 +54,28 @@ function resetDB(username, password) {
   setBtnBusy(resetDBBtn, false)
 }
 
+function fillRnd(username, password) {
+  hideError()
+
+  const fillRndBtn = document.querySelector('#fill_rnd')
+  setBtnBusy(fillRndBtn, true)
+
+  let confirm = window.confirm(
+    'Are you sure you want to fill database with sample data? Make sure to reset the database before continuing to avoid duplicates.'
+  )
+
+  if (confirm) {
+    postJSON('/fill_rnd', {
+      username: username,
+      password: password,
+    }).then((response) => {
+      showError(response.message, response.action, response.data.flag)
+    })
+  }
+
+  setBtnBusy(fillRndBtn, false)
+}
+
 function handleAuth() {
   hideError()
   const username = document.querySelector('#username').value
@@ -75,6 +97,9 @@ function handleAuth() {
           .addEventListener('click', handleOwner)
         document.querySelector('#reset_db').addEventListener('click', () => {
           resetDB(username, password)
+        })
+        document.querySelector('#fill_rnd').addEventListener('click', () => {
+          fillRnd(username, password)
         })
       }
     })

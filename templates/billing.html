@@ -18,9 +18,9 @@
                 <p class="price">Price</p>
                 <p class="quantity">Quantity</p>
                 <button type="button" class="quantity-btn" name="remove">-</button>
-                <button type="button" class="quantity-btn" name="add">-</button>
             </div>
             <section id="item-rows">
+                <p class="temp-msg">Start bill by adding products</p>
             </section>
         </section>
         <section id="total" class="container">
@@ -46,7 +46,7 @@
             </div>
             <div class="total-row item highlight">
                 <p class="item-label">Total</p>
-                <p id="total">total</p>
+                <p id="bill-total">total</p>
             </div>
             <div class="total-row item">
                 <p class="item-label">Paid</p>
@@ -76,22 +76,27 @@
             {% endfor %}
         </section>
         <div id="product-buttons" class="item container">
-            <div id="table_order_btn">
+            <button type="button" id="table_order" name="table_order">
                 <img alt="Table order icon" src="{{ url_for('static', filename='icons/table.svg') }}" height="100">
-                <p>Table Order</p>
-            </div>
-            <div id="take_away_btn">
+                Table Order
+            </button>
+            <button type="button" id="take_away" name="take_away">
                 <img alt="Take away icon" src="{{ url_for('static', filename='icons/logout.svg') }}" height="100">
-                <p>Take Away</p>
-            </div>
-            <div id="delivery_btn">
+                Take Away
+            </button>
+            <button type="button" id="delivery" name="delivery">
                 <img alt="Delivery icon" src="{{ url_for('static', filename='icons/delivery.svg') }}" height="100">
-                <p>Delivery</p>
-            </div>
-            <div id="save_btn">
+                Delivery
+            </button>
+            <button type="button" id="save" name="save">
                 <img alt="Save icon" src="{{ url_for('static', filename='icons/save.svg') }}" height="100">
-                <p>Save Order</p>
-            </div>
+                Save Order
+            </button>
+        </div>
+    </section>
+    <section id="pending">
+        <p class="item">Pending Orders</p>
+        <div id="pending-list">
         </div>
     </section>
 </section>
